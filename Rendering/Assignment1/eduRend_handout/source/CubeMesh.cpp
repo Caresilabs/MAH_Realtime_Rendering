@@ -19,15 +19,15 @@ CubeMesh::CubeMesh( ID3D11Device * device ) {
 	// new
 	v4.Pos = { -0.5, -0.5f, -0.5f };
 	v4.Normal = { 0, 0, 1 };
-	v4.TexCoord = { 1, 0 };
+	v4.TexCoord = { 0, 0 };
 
 	v5.Pos = { 0.5, -0.5f, -0.5f };
 	v5.Normal = { 0, 0, 1 };
-	v5.TexCoord = { 1, 0 };
+	v5.TexCoord = { 0, 1 };
 
 	v6.Pos = { 0.5, 0.5f, -0.5f };
 	v6.Normal = { 0, 0, 1 };
-	v6.TexCoord = { 1, 0 };
+	v6.TexCoord = { 1, 1 };
 
 	v7.Pos = { -0.5, 0.5f, -0.5f };
 	v7.Normal = { 0, 0, 1 };

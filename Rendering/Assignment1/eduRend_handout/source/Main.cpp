@@ -73,7 +73,7 @@ void initObjects()
 	// create camera
 	camera = new camera_t(fPI/4,				/*field-of-view*/
 						(float)width / height,	/*aspect ratio*/
-						1.0f,					/*z-near plane (everything closer will be clipped/removed)*/
+						.5f,					/*z-near plane (everything closer will be clipped/removed)*/
 						500.0f);				/*z-far plane (everything further will be clipped/removed)*/
 	camera->moveTo({ 0, 0, 5 });
 
@@ -89,30 +89,30 @@ void updateObjects(float dt)
 {
 	// basic camera control
 	if ( g_InputHandler->IsKeyPressed( Keys::Up ) || g_InputHandler->IsKeyPressed( Keys::W ) ) {
-		camera->moveForward( camera_vel *dt );//move( { 0.0f, 0.0f, camera_vel *dt } );
+		camera->moveForward( camera_vel *dt );
 	}
 	if ( g_InputHandler->IsKeyPressed( Keys::Down ) || g_InputHandler->IsKeyPressed( Keys::S ) ) {
-		camera->moveForward( -camera_vel *dt ); //camera->move( { 0.0f, 0.0f, -camera_vel *dt } );
+		camera->moveForward( -camera_vel *dt );
 	}
 	if ( g_InputHandler->IsKeyPressed( Keys::Right ) || g_InputHandler->IsKeyPressed( Keys::D ) ) {
-		camera->moveSideways( -camera_vel *dt );//->move( { -camera_vel *dt, 0.0f, 0.0f } );
+		camera->moveSideways( -camera_vel *dt );
 	}
 	if ( g_InputHandler->IsKeyPressed( Keys::Left ) || g_InputHandler->IsKeyPressed( Keys::A ) ) {
-		camera->moveSideways( camera_vel *dt ); //camera->move( { camera_vel *dt, 0.0f, 0.0f } );
+		camera->moveSideways( camera_vel *dt );
 	}
 
 	if (  g_InputHandler->IsKeyPressed( Keys::Q ) ) {
-		camera->moveVertical( camera_vel *dt ); //camera->move( { camera_vel *dt, 0.0f, 0.0f } );
+		camera->moveVertical( camera_vel *dt ); 
 	}
 	if (  g_InputHandler->IsKeyPressed( Keys::E ) ) {
-		camera->moveVertical( -camera_vel *dt ); //camera->move( { camera_vel *dt, 0.0f, 0.0f } );
+		camera->moveVertical( -camera_vel *dt );
 	}
 
 	camera->look( g_InputHandler->GetMouseDeltaX() * dt, -g_InputHandler->GetMouseDeltaY() *dt);
 
 	angle += angle_vel * dt;
 	Mtyre = mat4f::rotation(angle, 0.0f, 1.0f, 0.0f);
-	Mquad = mat4f::rotation( 9, 0, 1, 0 );//Mquad = mat4f::rotation(-angle, 0.0f, 1.0f, 0.0f) * mat4f::rotation(-45, 1, 0,0);
+	Mquad = Mquad = mat4f::rotation(-angle, 0.0f, 1.0f, 0.0f) * mat4f::rotation(-45, 1, 0,0);
 }
 
 //

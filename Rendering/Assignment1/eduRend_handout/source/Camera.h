@@ -19,8 +19,6 @@ class camera_t {
 	vec3f position;
 
 	vec3f up, direction;
-
-	float hz, vz;
 	float mouseSense;
 
 public:
@@ -30,7 +28,7 @@ public:
 		float aspect,
 		float zNear,
 		float zFar ) :
-		vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 5 ), hz( PI ), vz( 0 ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
+		vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 5 ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
 	}
 
 	void moveTo( const vec3f& p ) {
@@ -38,7 +36,7 @@ public:
 	}
 
 	void move( const vec3f& v ) {
-		position += v;// *(mat3f::rotation( hz, 0, 1, 0 )* mat3f::rotation( vz, 1, 0, 0 ));
+		position += v;
 	}
 
 	void moveSideways( float speed ) {
@@ -59,10 +57,9 @@ public:
 		if ( horizontal == 0 && vertical == 0 )
 			return;
 
-		hz = horizontal * mouseSense;
-		vz = vertical * mouseSense;
+		float hz = horizontal * mouseSense;
+		float vz = vertical * mouseSense;
 
-		auto rot = mat3f::rotation( hz, 0, 1, 0 ) * mat3f::rotation( vz, 0, 1, 0 );
 		direction = direction * mat3f::rotation( hz, up.x, up.y, up.z );
 		auto tmp = (direction % up).normalize();
 		direction = direction * mat3f::rotation( vz, tmp.x, tmp.y, tmp.z );
@@ -79,11 +76,8 @@ public:
 		mat4f mat;
 
 		mat.col[0] = vec4f( xaxis.x, yaxis.x, direction.x, 0 );
-
 		mat.col[1] = vec4f( xaxis.y, yaxis.y, direction.y, 0 );
-
 		mat.col[2] = vec4f( xaxis.z, yaxis.z, direction.z, 0 );
-
 		mat.col[3] = vec4f( 0, 0, 0, 1 );
 		return mat;
 	}
