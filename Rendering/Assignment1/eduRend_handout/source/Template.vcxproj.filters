@@ -40,6 +40,9 @@
     <ClCompile Include="CubeMesh.cpp">
       <Filter>Source Files\MyCode</Filter>
     </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -77,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="CubeMesh.h">
       <Filter>Source Files\MyCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

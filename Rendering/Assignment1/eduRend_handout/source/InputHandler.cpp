@@ -26,6 +26,9 @@ bool InputHandler::ReadKeyboard(){
 }
 
 bool InputHandler::ReadMouse(){
+	if ( mouse == nullptr )
+		return false;
+
 	HRESULT result;
 	prevMouseState = mouseState;
 	result = mouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&mouseState);

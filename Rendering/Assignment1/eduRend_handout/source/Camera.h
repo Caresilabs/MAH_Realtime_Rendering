@@ -21,6 +21,9 @@ class camera_t {
 	vec3f up, direction;
 	float mouseSense;
 
+	mat4f projectionMatrix;
+	mat4f invViewMatrix;
+
 public:
 
 	camera_t(
@@ -28,7 +31,7 @@ public:
 		float aspect,
 		float zNear,
 		float zFar ) :
-		vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 5 ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
+		vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 3 ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
 	}
 
 	void moveTo( const vec3f& p ) {
@@ -53,6 +56,11 @@ public:
 		position += direction * speed;
 	}
 
+	void updateFrustrum() {
+		invViewMatrix = (lookAtMatrix().inverse());
+		projectionMatrix = mat4f::projection( vfov, aspect, zNear, zFar );
+	}
+
 	void look( float horizontal, float vertical ) {
 		if ( horizontal == 0 && vertical == 0 )
 			return;
@@ -60,34 +68,37 @@ public:
 		float hz = horizontal * mouseSense;
 		float vz = vertical * mouseSense;
 
-		direction = direction * mat3f::rotation( hz, up.x, up.y, up.z );
+		direction = mat3f::rotation( hz, up.x, up.y, up.z ) * direction;
 		auto tmp = (direction % up).normalize();
-		direction = direction * mat3f::rotation( vz, tmp.x, tmp.y, tmp.z );
+		direction = mat3f::rotation( vz, tmp.x, tmp.y, tmp.z ) * direction;
+		direction.normalize();
 
 	}
 
-	mat4f makeRotationDir() const {
-		vec3f xaxis = (up %direction);
-		xaxis.normalize();
+	mat4f lookAtMatrix() const {
+		vec3f tempDir = -direction;
 
-		vec3f yaxis = direction % xaxis;
-		yaxis.normalize();
+		vec3f right = tempDir % up;
+		right.normalize();
+
+		vec3f realUp = right % tempDir;
+		realUp.normalize();
 
 		mat4f mat;
 
-		mat.col[0] = vec4f( xaxis.x, yaxis.x, direction.x, 0 );
-		mat.col[1] = vec4f( xaxis.y, yaxis.y, direction.y, 0 );
-		mat.col[2] = vec4f( xaxis.z, yaxis.z, direction.z, 0 );
-		mat.col[3] = vec4f( 0, 0, 0, 1 );
+		mat.col[0] = vec4f( right.x, right.y, right.z, 0 );
+		mat.col[1] = vec4f( realUp.x, realUp.y, realUp.z, 0 );
+		mat.col[2] = vec4f( tempDir.x, tempDir.y, tempDir.z, 0 );
+		mat.col[3] = vec4f( position.x, position.y, position.z, 1 );
 		return mat;
 	}
 
 	mat4f get_WorldToViewMatrix() const {
-		return  makeRotationDir() * mat4f::translation( position );
+		return  invViewMatrix;
 	}
 
 	mat4f get_ProjectionMatrix() const {
-		return mat4f::projection( vfov, aspect, zNear, zFar );
+		return projectionMatrix;
 	}
 };
 

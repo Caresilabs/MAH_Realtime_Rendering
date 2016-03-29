@@ -188,6 +188,7 @@
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="vec\mat.cpp" />
     <ClCompile Include="vec\vec.cpp" />
   </ItemGroup>
@@ -197,6 +198,7 @@
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="parseutil.h" />
     <ClInclude Include="CubeMesh.h" />
     <ClInclude Include="ShaderBuffers.h" />

@@ -8,6 +8,8 @@
 #include "Camera.h"
 #include "Geometry.h"
 #include "CubeMesh.h"
+#include "Node.h"
+#include <vector>
 
 //--------------------------------------------------------------------------------------
 // Global Variables
@@ -52,7 +54,7 @@ void				Release();
 // object declarations
 //
 camera_t* camera;
-float camera_vel = 1.5f;	// world unit/s
+float camera_vel = 2.5f;	// world unit/s
 CubeMesh* cube;
 OBJModel_t* obj;
 // model-to-world matrices
@@ -64,6 +66,10 @@ float angle_vel = fPI / 4;	// rad/s
 mat4f Mview;
 // projection matrix
 mat4f Mproj;
+
+
+std::vector<Node*>	nodes;
+Node*				rootNode;
 
 //
 // object initialization
@@ -80,6 +86,33 @@ void initObjects()
 	// create objects
 	cube = new CubeMesh(g_Device);
 	obj = new OBJModel_t("../../assets/tyre/Tyre.obj", g_Device);
+
+	// Init nodes
+
+	// Sun
+	Node* sunNode = new Node( "Sun", cube );
+	sunNode->scale.set( 1.4f );
+	nodes.push_back( sunNode );
+	rootNode = sunNode;
+	{
+		// Earth
+		Node* earthNode = new Node( "Earth", cube );
+		earthNode->position.set( 3.5f, 0, 0 );
+		earthNode->scale.set( 0.9f );
+		sunNode->add( earthNode );
+		{
+			// EarthmoonPivot
+			Node* earthMoonPivotNode = new Node( "EarthMoonPivot", nullptr );
+			earthNode->add( earthMoonPivotNode );
+			{
+				// Earthmoon
+				Node* earthMoonNode = new Node( "EarthMoon", cube );
+				earthMoonNode->position.set( 1.2f, 0, 0 );
+				earthMoonNode->scale.set( 0.35f );
+				earthMoonPivotNode->add( earthMoonNode );
+			}
+		}
+	}
 }
 
 //
@@ -95,24 +128,36 @@ void updateObjects(float dt)
 		camera->moveForward( -camera_vel *dt );
 	}
 	if ( g_InputHandler->IsKeyPressed( Keys::Right ) || g_InputHandler->IsKeyPressed( Keys::D ) ) {
-		camera->moveSideways( -camera_vel *dt );
+		camera->moveSideways( camera_vel *dt );
 	}
 	if ( g_InputHandler->IsKeyPressed( Keys::Left ) || g_InputHandler->IsKeyPressed( Keys::A ) ) {
-		camera->moveSideways( camera_vel *dt );
+		camera->moveSideways( -camera_vel *dt );
 	}
 
 	if (  g_InputHandler->IsKeyPressed( Keys::Q ) ) {
-		camera->moveVertical( camera_vel *dt ); 
+		camera->moveVertical( -camera_vel *dt ); 
 	}
 	if (  g_InputHandler->IsKeyPressed( Keys::E ) ) {
-		camera->moveVertical( -camera_vel *dt );
+		camera->moveVertical( camera_vel *dt );
 	}
 
 	camera->look( g_InputHandler->GetMouseDeltaX() * dt, -g_InputHandler->GetMouseDeltaY() *dt);
+	camera->updateFrustrum();
 
-	angle += angle_vel * dt;
-	Mtyre = mat4f::rotation(angle, 0.0f, 1.0f, 0.0f);
-	Mquad = Mquad = mat4f::rotation(-angle, 0.0f, 1.0f, 0.0f) * mat4f::rotation(-45, 1, 0,0);
+	// Rotate sun
+	rootNode->rotation.y += dt * 1;
+
+	// Rotate earth
+	rootNode->find( "Earth" )->rotation.y += dt * 0.5f;
+	rootNode->find( "EarthMoonPivot" )->rotation.y += dt * 0.15f;
+
+	for each (auto node in nodes) {
+		node->calculateTransform( true );
+	}
+
+	//angle += angle_vel * dt;
+	//Mtyre = mat4f::rotation(angle, 0.0f, 1.0f, 0.0f);
+	//Mquad = Mquad = mat4f::rotation(-angle, 0.0f, 1.0f, 0.0f) * mat4f::rotation(-45, 1, 0,0);
 }
 
 //
@@ -120,11 +165,15 @@ void updateObjects(float dt)
 //
 void renderObjects()
 {
-	Mview = camera->get_WorldToViewMatrix();
-	Mproj = camera->get_ProjectionMatrix();
+	//Mview = camera->get_WorldToViewMatrix();
+	//Mproj = camera->get_ProjectionMatrix();
 
-	cube->MapMatrixBuffers(g_DeviceContext, g_MatrixBuffer, Mquad, Mview, Mproj);
-	cube->render(g_DeviceContext);
+	for each (auto node in nodes) {
+		node->render(g_DeviceContext, g_MatrixBuffer ,camera);
+	}
+
+	//cube->MapMatrixBuffers(g_DeviceContext, g_MatrixBuffer, Mquad, Mview, Mproj);
+	//cube->render(g_DeviceContext);
 	
 	//obj->MapMatrixBuffers(g_DeviceContext, g_MatrixBuffer, Mtyre, Mview, Mproj);
 	//obj->render(g_DeviceContext);
@@ -135,6 +184,11 @@ void renderObjects()
 //
 void releaseObjects()
 {
+	for each (auto node in nodes) {
+		SAFE_DELETE( node );
+	}
+	nodes.clear();
+
 	SAFE_DELETE( cube );
 	SAFE_DELETE(obj);
 }
@@ -435,7 +489,7 @@ HRESULT InitDirect3DAndSwapChain(int width, int height)
 void InitRasterizerState()
 {
 	D3D11_RASTERIZER_DESC rasterizerState;
-	rasterizerState.FillMode = D3D11_FILL_WIREFRAME;
+	rasterizerState.FillMode = D3D11_FILL_SOLID;
 	rasterizerState.CullMode = D3D11_CULL_BACK;
 	rasterizerState.FrontCounterClockwise = true;
 	rasterizerState.DepthBias = false;

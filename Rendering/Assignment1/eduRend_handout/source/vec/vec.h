@@ -219,6 +219,12 @@ namespace linalg
             this->y = y;
             this->z = z;
         }
+
+		void set( const T &a) {
+			this->x = a;
+			this->y = a;
+			this->z = a;
+		}
         
         T dot(const vec3<T> &u) const
         {
