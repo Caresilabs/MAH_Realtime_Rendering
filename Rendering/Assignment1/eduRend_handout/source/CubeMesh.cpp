@@ -1,8 +1,42 @@
 #include "CubeMesh.h"
 
+void CubeMesh::CreateFace( vec3f p0, vec3f p1, vec3f p2, vec3f p3, vec3f normal ) {
+	// populate the index array
+	
+	// triangle #1
+	indices.push_back( vertices.size() + 0 );
+	indices.push_back( vertices.size() + 1 );
+	indices.push_back( vertices.size() + 3 );
+
+	// triangle #2
+	indices.push_back( vertices.size() + 1 );
+	indices.push_back( vertices.size() + 2 ); 
+	indices.push_back( vertices.size() + 3 );
+	 
+	// Vertices
+	vertex_t v0, v1, v2, v3;
+	v0.Pos = p0;
+	v0.Normal = normal;
+	v0.TexCoord = { 0, 0 };
+	v1.Pos = p1;
+	v1.Normal = normal;
+	v1.TexCoord = { 0, 1 };
+	v2.Pos = p2;
+	v2.Normal = normal;
+	v2.TexCoord = { 1, 1 };
+	v3.Pos = p3;
+	v3.Normal = normal;
+	v3.TexCoord = { 1, 0 };
+
+	vertices.push_back( v0 );
+	vertices.push_back( v1 );
+	vertices.push_back( v2 );
+	vertices.push_back( v3 );
+}
+
 CubeMesh::CubeMesh( ID3D11Device * device ) {
 	// populate the vertex array with 8 vertices
-	vertex_t v0, v1, v2, v3, v4, v5, v6, v7;
+	/*vertex_t v0, v1, v2, v3, v4, v5, v6, v7;
 	v0.Pos = { -0.5, -0.5f, 0.5f };
 	v0.Normal = { 0, 0, 1 };
 	v0.TexCoord = { 0, 0 };
@@ -101,6 +135,22 @@ CubeMesh::CubeMesh( ID3D11Device * device ) {
 	indices.push_back( 6 );
 	indices.push_back( 3 );
 	indices.push_back( 2 );
+
+	*/
+
+
+	// F & B
+	CreateFace( { -0.5, 0.5f, 0.5f }, { 0.5, 0.5f, 0.5f }, { 0.5, -0.5f, 0.5f }, { -0.5, -0.5f, 0.5f }, { 0, 0, 1 } );
+	CreateFace( { -0.5, -0.5f, -0.5f } , { 0.5, -0.5f, -0.5f }, { 0.5, 0.5f, -0.5f } ,{ -0.5, 0.5f, -0.5f }, { 0, 0, -1 } );
+	
+	// Up && Down
+	CreateFace( { -0.5, 0.5f, -0.5f }, { 0.5, 0.5f, -0.5f }, { 0.5, 0.5f, 0.5f }, { -0.5, 0.5f, 0.5f }, { 0, 1, 0 } );
+	CreateFace( { -0.5, -0.5f, 0.5f }, { 0.5, -0.5f, 0.5f }, { 0.5, -0.5f, -0.5f }, { -0.5, -0.5f, -0.5f }, { 0, -1, 0 } );
+
+	// L && R
+	CreateFace( { -0.5, -0.5f, 0.5f }, { -0.5, -0.5f, -0.5f }, { -0.5, 0.5f, -0.5f }, { -0.5, 0.5f, 0.5f }, { -1, 0, 0 } );
+	CreateFace( { 0.5, -0.5f, -0.5f }, { 0.5, -0.5f, 0.5f }, { 0.5, 0.5f, 0.5f }, { 0.5, 0.5f, -0.5f }, { 1, 0, 0 } );
+
 
 	// vertex array descriptor
 	D3D11_BUFFER_DESC vbufferDesc = { 0.0f };
