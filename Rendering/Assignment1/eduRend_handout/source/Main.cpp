@@ -165,12 +165,12 @@ void updateObjects(float dt)
 //
 void renderObjects()
 {
+	for each (auto node in nodes) {
+		node->render( g_DeviceContext, g_MatrixBuffer, camera );
+	}
+
 	//Mview = camera->get_WorldToViewMatrix();
 	//Mproj = camera->get_ProjectionMatrix();
-
-	for each (auto node in nodes) {
-		node->render(g_DeviceContext, g_MatrixBuffer ,camera);
-	}
 
 	//cube->MapMatrixBuffers(g_DeviceContext, g_MatrixBuffer, Mquad, Mview, Mproj);
 	//cube->render(g_DeviceContext);

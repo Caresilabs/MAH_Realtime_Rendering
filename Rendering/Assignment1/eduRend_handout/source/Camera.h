@@ -31,7 +31,7 @@ public:
 		float aspect,
 		float zNear,
 		float zFar ) :
-		vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 3 ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
+		vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 2 ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
 	}
 
 	void moveTo( const vec3f& p ) {
