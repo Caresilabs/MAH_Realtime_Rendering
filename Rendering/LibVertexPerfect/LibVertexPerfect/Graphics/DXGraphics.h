@@ -14,6 +14,8 @@ public:
 	// Inherited via Graphics
 	virtual void Render(ApplicationListener* listener) override;
 
+	virtual void ClearScreen( float r, float g, float b ) override;
+
 	~DXGraphics();
 private:
 
@@ -32,5 +34,6 @@ private:
 	ID3D11Device*			Device = nullptr;
 	ID3D11DeviceContext*	DeviceContext = nullptr;
 	ID3D11RasterizerState*	RasterState = nullptr;
+
 };
 

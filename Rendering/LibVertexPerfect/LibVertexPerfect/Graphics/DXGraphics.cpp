@@ -24,13 +24,15 @@ DXGraphics::DXGraphics(HWND& window, bool vsync) : MainWindow(window) {
 }
 
 void DXGraphics::Render(ApplicationListener* listener) {
-	//clear back buffer, black color
-	static float ClearColor[4] = { 0, 1, 0, 1 };
-	DeviceContext->ClearRenderTargetView( RenderTargetView, ClearColor );
-
 	listener->Render();
 	SwapChain->Present( 0, 0 );
 }
+
+void DXGraphics::ClearScreen( float r, float g, float b ) {
+	static float ClearColor[4] = { r, g, b, 1 };
+	DeviceContext->ClearRenderTargetView( RenderTargetView, ClearColor );
+}
+
 
 DXGraphics::~DXGraphics() {
 }
@@ -150,4 +152,5 @@ HRESULT DXGraphics::CreateRenderTargetView() {
 
 	return hr;
 }
+
 

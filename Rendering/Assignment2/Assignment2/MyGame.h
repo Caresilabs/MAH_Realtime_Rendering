@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ApplicationListener.h"
+#include "LVP.h"
 
 class MyGame :
 	public ApplicationListener {

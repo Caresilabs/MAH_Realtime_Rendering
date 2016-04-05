@@ -144,6 +144,9 @@
     <ClInclude Include="Graphics\DXGraphics.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="LVP.h" />
+    <ClInclude Include="Math\mat.h" />
+    <ClInclude Include="Math\math.h" />
+    <ClInclude Include="Math\vec.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -151,6 +154,8 @@
     <ClCompile Include="DXApplication.cpp" />
     <ClCompile Include="Graphics\DXGraphics.cpp" />
     <ClCompile Include="LVP.cpp" />
+    <ClCompile Include="Math\mat.cpp" />
+    <ClCompile Include="Math\vec.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

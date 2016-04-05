@@ -10,5 +10,5 @@ class Graphics {
 public:
 	virtual void Render( ApplicationListener* listener ) = 0;
 
-	//virtual void
+	virtual void ClearScreen( float r, float g, float b ) = 0;
 };
