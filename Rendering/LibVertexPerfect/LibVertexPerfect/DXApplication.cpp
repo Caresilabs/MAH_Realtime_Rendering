@@ -40,7 +40,7 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 	Height = 900;
 
 	LVP::App = this;
-	LVP::Graphics = new DXGraphics();
+	LVP::Graphics = new DXGraphics(MainWindow, true);
 
 	// todo
 	Listener = config.app;
@@ -69,7 +69,7 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 		}
 		float dt = NewTime - Oldtime;
 		Listener->Update( dt );
-		Listener->Render();
+		LVP::Graphics->Render(Listener);
 
 		Oldtime = NewTime;
 	}
