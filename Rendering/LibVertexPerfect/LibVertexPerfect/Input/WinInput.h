@@ -1,11 +1,15 @@
 #pragma once
 
 #include "Input.h"
+#include <windows.h>
 
 class WinInput : public Input {
 public:
 	WinInput();
-	~WinInput();
+
+	void ResetCursor( HWND window );
+
+	void Update( HWND window );
 
 	// Inherited via Input
 	virtual float GetMouseX() override;
@@ -16,5 +20,11 @@ public:
 	bool IsKeyDown( char key );
 
 	bool Keys[256] = { 0 };
+
+	float MousePosX;
+	float MousePosY;
+
+	float LastMousePosX;
+	float LastMousePosY;
 };
 

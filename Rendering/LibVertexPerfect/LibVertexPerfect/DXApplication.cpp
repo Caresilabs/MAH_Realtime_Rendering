@@ -52,6 +52,7 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 	LVP::App = this;
 	LVP::Graphics = new DXGraphics(MainWindow, true);
 	Input = new WinInput();
+	Input->ResetCursor(MainWindow);
 	LVP::Input = Input;
 
 	// todo
@@ -77,6 +78,16 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 			case WM_KEYUP:
 				Input->Keys[Msg.wParam] = false;
 				break;
+			case WM_MOUSEMOVE:
+			{
+				/*Input->LastMousePosX = Input->MousePosX;
+				Input->LastMousePosY = Input->MousePosY;
+
+				Input->MousePosX = GET_X_LPARAM( Msg.lParam );
+				Input->MousePosY = GET_Y_LPARAM( Msg.lParam );
+*/
+				break;
+			}
 			default:
 				break;
 			}
@@ -88,6 +99,8 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 		__int64 currTimeStamp = 0;
 		QueryPerformanceCounter( (LARGE_INTEGER*)&currTimeStamp );
 		float dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
+
+		Input->Update(MainWindow);
 
 		Listener->Update( dt );
 		LVP::Graphics->Render(Listener);

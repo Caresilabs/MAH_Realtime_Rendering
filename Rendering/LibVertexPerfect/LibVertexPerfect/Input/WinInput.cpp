@@ -1,28 +1,46 @@
 #include "stdafx.h"
 #include "WinInput.h"
 
-
-WinInput::WinInput() {
+WinInput::WinInput() : LastMousePosX( -1 ), LastMousePosY( -1 ), MousePosX( -1 ), MousePosY( -1 ) {
+	ShowCursor( FALSE );
 }
 
+void WinInput::Update( HWND window ) {
+	POINT Point = { 0 };
+	if ( GetCursorPos( &Point ) ) {
+		if ( ScreenToClient( window, &Point ) ) {
 
-WinInput::~WinInput() {
+			MousePosX = Point.x;
+			MousePosY = Point.y;
+		}
+	}
+
+	ResetCursor(window);
+}
+
+void WinInput::ResetCursor( HWND window ) {
+	POINT Point = { 100, 100 };
+	LastMousePosX = Point.x;
+	LastMousePosY = Point.y;
+	if ( ClientToScreen( window, &Point ) ) {
+		SetCursorPos( Point.x, Point.y );
+	}
 }
 
 float WinInput::GetMouseX() {
-	return 0.0f;
+	return MousePosX;
 }
 
 float WinInput::GetMouseY() {
-	return 0.0f;
+	return MousePosY;
 }
 
 float WinInput::GetMouseDeltaX() {
-	return 0.0f;
+	return LastMousePosX == -1 ? 0 : (MousePosX - LastMousePosX);
 }
 
 float WinInput::GetMouseDeltaY() {
-	return 0.0f;
+	return LastMousePosY == -1 ? 0 : (MousePosY - LastMousePosY);
 }
 
 bool WinInput::IsKeyDown( char key ) {

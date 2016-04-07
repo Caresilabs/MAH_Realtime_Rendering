@@ -17,15 +17,35 @@ void MyGame::Start() {
 }
 
 void MyGame::Update( float delta ) {
+	static float speed = 3;
+
+	if ( LVP::Input->IsKeyDown( 'S' ) ) {
+		cam->MoveForward( -delta * speed );
+	}
+	if ( LVP::Input->IsKeyDown( 'W' ) ) {
+		cam->MoveForward( delta * speed );
+	}
+
+	if ( LVP::Input->IsKeyDown( 'A' ) ) {
+		cam->MoveSideways( -delta * speed );
+	}
+	if ( LVP::Input->IsKeyDown( 'D' ) ) {
+		cam->MoveSideways( delta * speed );
+	}
+
+	if ( LVP::Input->IsKeyDown( 'Q' ) ) {
+		cam->MoveVertical( -delta * speed );
+	}
+	if ( LVP::Input->IsKeyDown( 'E' ) ) {
+		cam->MoveVertical( delta * speed );
+	}
+
+	cam->Look( LVP::Input->GetMouseDeltaX() * delta, -LVP::Input->GetMouseDeltaY() *delta );
+
 	cam->UpdateFrustrum();
 	instance->Transform = instance->Transform * mat4f::rotation( delta, { 0, 1, 0 } );
 
-	if ( LVP::Input->IsKeyDown( 'S' ) ) {
-		cam->MoveForward( -delta );
-	}
-	if ( LVP::Input->IsKeyDown( 'W' ) ) {
-		cam->MoveForward( delta );
-	}
+
 }
 
 void MyGame::Render() {

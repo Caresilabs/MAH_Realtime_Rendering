@@ -2,6 +2,7 @@
 
 #include <string>
 #include <windows.h>
+#include <windowsx.h>
 #include "Application.h"
 #include "Input/WinInput.h"
 
