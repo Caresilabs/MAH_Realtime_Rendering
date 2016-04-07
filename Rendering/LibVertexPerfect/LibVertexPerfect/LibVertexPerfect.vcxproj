@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\Assignment2\packages\directxtk_desktop_2015.2016.2.23.1\build\native\directxtk_desktop_2015.props" Condition="Exists('..\..\Assignment2\packages\directxtk_desktop_2015.2016.2.23.1\build\native\directxtk_desktop_2015.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -139,31 +140,57 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Graphics\Camera.h" />
     <ClInclude Include="DXApplication.h" />
     <ClInclude Include="ApplicationListener.h" />
+    <ClInclude Include="Graphics\DrawCall.h" />
     <ClInclude Include="Graphics\DXGraphics.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\Mesh.h" />
+    <ClInclude Include="Graphics\parseutil.h" />
+    <ClInclude Include="Input\Input.h" />
     <ClInclude Include="LVP.h" />
     <ClInclude Include="Math\mat.h" />
     <ClInclude Include="Math\math.h" />
     <ClInclude Include="Math\vec.h" />
+    <ClInclude Include="Graphics\MeshInstance.h" />
+    <ClInclude Include="Graphics\Shaders\ShaderProgram.h" />
+    <ClInclude Include="Graphics\OBJLoader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Input\WinInput.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Graphics\Camera.cpp" />
     <ClCompile Include="DXApplication.cpp" />
     <ClCompile Include="Graphics\DXGraphics.cpp" />
+    <ClCompile Include="Graphics\Mesh.cpp" />
     <ClCompile Include="LVP.cpp" />
     <ClCompile Include="Math\mat.cpp" />
     <ClCompile Include="Math\vec.cpp" />
+    <ClCompile Include="Graphics\MeshInstance.cpp" />
+    <ClCompile Include="Graphics\Shaders\ShaderProgram.cpp" />
+    <ClCompile Include="Graphics\OBJLoader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Input\WinInput.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\Assignment2\packages\directxtk_desktop_2015.2016.2.23.1\build\native\directxtk_desktop_2015.targets" Condition="Exists('..\..\Assignment2\packages\directxtk_desktop_2015.2016.2.23.1\build\native\directxtk_desktop_2015.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\Assignment2\packages\directxtk_desktop_2015.2016.2.23.1\build\native\directxtk_desktop_2015.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Assignment2\packages\directxtk_desktop_2015.2016.2.23.1\build\native\directxtk_desktop_2015.props'))" />
+    <Error Condition="!Exists('..\..\Assignment2\packages\directxtk_desktop_2015.2016.2.23.1\build\native\directxtk_desktop_2015.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Assignment2\packages\directxtk_desktop_2015.2016.2.23.1\build\native\directxtk_desktop_2015.targets'))" />
+  </Target>
 </Project>

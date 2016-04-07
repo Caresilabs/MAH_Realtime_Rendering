@@ -55,7 +55,7 @@ void				Release();
 //
 camera_t* camera;
 float camera_vel = 2.5f;	// world unit/s
-CubeMesh* cube;
+Geometry_t* cube;
 OBJModel_t* obj;
 // model-to-world matrices
 mat4f Mtyre;
@@ -85,7 +85,7 @@ void initObjects()
 
 	// create objects
 	cube = new CubeMesh(g_Device);
-	obj = new OBJModel_t("../../assets/tyre/Tyre.obj", g_Device);
+	cube = new OBJModel_t("../../assets/tyre/Tyre.obj", g_Device);
 
 	// Init nodes
 

@@ -2,12 +2,20 @@
 #include "DXApplication.h"
 #include "ApplicationListener.h"
 #include "Graphics/DXGraphics.h"
+#include "Input/WinInput.h"
 
 LRESULT CALLBACK MainWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 	LRESULT Result = 0;
+	
+	PAINTSTRUCT ps;
+	HDC hdc;
 
 	// catch any relevant messages here
 	switch ( uMsg ) {
+	case WM_PAINT:
+		hdc = BeginPaint( hWnd, &ps );
+		EndPaint( hWnd, &ps );
+		break;
 	case WM_ACTIVATE:
 
 		break;
@@ -17,10 +25,12 @@ LRESULT CALLBACK MainWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 	case WM_DESTROY:
 		LVP::App->IsRunning = false;
 		break;
-	case WM_KEYDOWN:
+	case WM_KEYDOWN:							// Here's what you're interested in! -- check to see if someone pressed a key.
 	{
-		if ( wParam == 'A' ) {
-		}
+		break;
+	}
+	case WM_KEYUP:								// This message arrives when person lets go of key.
+	{
 		break;
 	}
 	default:
@@ -31,47 +41,58 @@ LRESULT CALLBACK MainWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 }
 
 int DXApplication::Play( const DXApplicationConfig& config ) {
+	//TODO
+	Width = 768;
+	Height = 768;
+
 	if ( FAILED( InitWindow( config ) ) ) {
 		return 0;
 	}
 
-	//TODO
-	Width = 900;
-	Height = 900;
-
 	LVP::App = this;
 	LVP::Graphics = new DXGraphics(MainWindow, true);
+	Input = new WinInput();
+	LVP::Input = Input;
 
 	// todo
 	Listener = config.app;
 	Listener->Start();
 
 	// init time
-	LARGE_INTEGER Frequency;
-	QueryPerformanceFrequency( &Frequency );
+	__int64 cntsPerSec = 0;
+	QueryPerformanceFrequency( (LARGE_INTEGER*)&cntsPerSec );
+	float secsPerCnt = 1.0f / (float)cntsPerSec;
 
-	SecondsPerTick = 1.0 / (double)Frequency.QuadPart;
-
-	LARGE_INTEGER Counter;
-	QueryPerformanceCounter( &Counter );
-	TimePassed = Counter.QuadPart;
-
-	float Oldtime = 0;
+	__int64 prevTimeStamp = 0;
+	QueryPerformanceCounter( (LARGE_INTEGER*)&prevTimeStamp );
 
 	MSG Msg = { 0 };
 	while ( IsRunning ) {
-		float NewTime = FloatTime();
-
 		// Check in with OS
 		while ( PeekMessage( &Msg, NULL, 0, 0, PM_REMOVE ) ) {
+			switch ( Msg.message ) {
+			case WM_KEYDOWN:
+				Input->Keys[Msg.wParam] = true;
+				break;
+			case WM_KEYUP:
+				Input->Keys[Msg.wParam] = false;
+				break;
+			default:
+				break;
+			}
+
 			TranslateMessage( &Msg );
 			DispatchMessage( &Msg );
 		}
-		float dt = NewTime - Oldtime;
+
+		__int64 currTimeStamp = 0;
+		QueryPerformanceCounter( (LARGE_INTEGER*)&currTimeStamp );
+		float dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
+
 		Listener->Update( dt );
 		LVP::Graphics->Render(Listener);
 
-		Oldtime = NewTime;
+		prevTimeStamp = currTimeStamp;
 	}
 
 }
@@ -100,8 +121,8 @@ HRESULT DXApplication::InitWindow( const DXApplicationConfig& config ) {
 
 	// create rectangle for window
 	RECT r = { 0 };
-	r.right = 900;
-	r.bottom = 900;
+	r.right = Width;
+	r.bottom = Height;
 	AdjustWindowRectEx( &r, WindowStyle, 0, WindowExStyle );
 
 	// create our window
@@ -118,15 +139,3 @@ HRESULT DXApplication::InitWindow( const DXApplicationConfig& config ) {
 	return S_OK;
 }
 
-float DXApplication::FloatTime() {
-	LARGE_INTEGER Counter;
-	QueryPerformanceCounter( &Counter );
-
-	__int64 Interval = Counter.QuadPart - TimeCount;
-	TimeCount = Counter.QuadPart;
-
-	double SecondsGoneBy = (double)Interval * SecondsPerTick;
-	TimePassed += SecondsGoneBy;
-
-	return (float)TimePassed;
-}

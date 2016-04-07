@@ -3,6 +3,7 @@
 #include <string>
 #include <windows.h>
 #include "Application.h"
+#include "Input/WinInput.h"
 
 class ApplicationListener;
 
@@ -28,19 +29,14 @@ public:
 private:
 	HRESULT					InitWindow( const DXApplicationConfig& config );
 
-	float					FloatTime();
-
 	HINSTANCE				MainInstance;
 	HWND					MainWindow;
 
 	ApplicationListener*	Listener;
 
+	WinInput*				Input;
+
 	int						Width;
 	int						Height;
-
-
-	float					SecondsPerTick;
-	__int64					TimeCount;
-	double					TimePassed;
 };
 

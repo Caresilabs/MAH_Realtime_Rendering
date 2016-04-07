@@ -2,10 +2,11 @@
 
 #include "Application.h"
 #include "Graphics/Graphics.h"
+#include "Input/Input.h"
 
 class LVP {
 public:
 	static Application* App;
 	static Graphics* Graphics;
-	static int* Input;
+	static Input* Input;
 };

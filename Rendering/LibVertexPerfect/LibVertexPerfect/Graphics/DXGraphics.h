@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include <D3D11.h>
-#include <d3dCompiler.h>
 #include <dinput.h>
 
 class DXGraphics :
@@ -17,6 +16,10 @@ public:
 	virtual void ClearScreen( float r, float g, float b ) override;
 
 	~DXGraphics();
+
+	ID3D11Device*			Device = nullptr;
+	ID3D11DeviceContext*	DeviceContext = nullptr;
+
 private:
 
 	HRESULT InitDirect3DAndSwapChain( int width, int height );
@@ -31,8 +34,6 @@ private:
 	ID3D11RenderTargetView* RenderTargetView = nullptr;
 	ID3D11Texture2D*        DepthStencil = nullptr;
 	ID3D11DepthStencilView* DepthStencilView = nullptr;
-	ID3D11Device*			Device = nullptr;
-	ID3D11DeviceContext*	DeviceContext = nullptr;
 	ID3D11RasterizerState*	RasterState = nullptr;
 
 };

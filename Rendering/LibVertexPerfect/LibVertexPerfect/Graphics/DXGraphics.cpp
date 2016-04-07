@@ -2,8 +2,9 @@
 #include "DXGraphics.h"
 
 DXGraphics::DXGraphics(HWND& window, bool vsync) : MainWindow(window) {
-	float width = 900;
-	float height = 900;
+	float width = 768;
+	float height = 768;
+
 	HRESULT hr = S_OK;
 
 	if ( SUCCEEDED( hr = InitDirect3DAndSwapChain( width, height ) ) ) {
@@ -29,12 +30,19 @@ void DXGraphics::Render(ApplicationListener* listener) {
 }
 
 void DXGraphics::ClearScreen( float r, float g, float b ) {
-	static float ClearColor[4] = { r, g, b, 1 };
+	float ClearColor[4] = { r, g, b, 1 };
 	DeviceContext->ClearRenderTargetView( RenderTargetView, ClearColor );
+
+	DeviceContext->ClearDepthStencilView( DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 }
 
 
 DXGraphics::~DXGraphics() {
+	SAFE_RELEASE( SwapChain );
+	SAFE_RELEASE( RenderTargetView );
+	SAFE_RELEASE( DepthStencil );
+	SAFE_RELEASE( DepthStencilView );
+	SAFE_RELEASE( RasterState );
 }
 
 HRESULT DXGraphics::InitDirect3DAndSwapChain( int width, int height ) {

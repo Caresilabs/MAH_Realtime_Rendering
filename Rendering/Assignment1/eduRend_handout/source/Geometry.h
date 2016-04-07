@@ -44,7 +44,6 @@ public:
 
 	virtual ~Geometry_t()
 	{ 
-		// release the Krak-..device buffers
 		SAFE_RELEASE(vertex_buffer);
 		SAFE_RELEASE(index_buffer);
 	}

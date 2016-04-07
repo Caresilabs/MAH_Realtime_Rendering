@@ -8,6 +8,7 @@
 #define SAFE_DELETE(x) if( x ) { delete(x); (x) = nullptr; }
 #define SAFE_DELETE_ARRAY(x) if( x ) { delete[](x); (x) = nullptr; }
 #define SAFE_RELEASE(x) if( x ) { (x)->Release(); (x) = nullptr; }
+#define ASSERT(x) if(FAILED(x)) { throw std::runtime_error("ASSERT failed\n"); }
 #define PI (3.14159265358979323846f)
 
 #pragma comment(lib, "d3d11.lib")
