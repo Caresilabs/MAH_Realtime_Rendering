@@ -1,12 +1,11 @@
 #include "stdafx.h"
 #include "DXApplication.h"
 #include "ApplicationListener.h"
-#include "Graphics/DXGraphics.h"
 #include "Input/WinInput.h"
 
 LRESULT CALLBACK MainWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 	LRESULT Result = 0;
-	
+
 	PAINTSTRUCT ps;
 	HDC hdc;
 
@@ -19,6 +18,25 @@ LRESULT CALLBACK MainWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 	case WM_ACTIVATE:
 
 		break;
+	case WM_KILLFOCUS:
+		LVP::Input->CatchMouse = false;
+		ShowCursor( TRUE );
+		break;
+	case WM_SIZING:
+	{
+		DXGraphics* Graphics = static_cast<DXGraphics*>(LVP::Graphics);
+		DXApplication* App = static_cast<DXApplication*>(LVP::App);
+
+		RECT size;
+		if ( GetClientRect( App->MainWindow, &size ) ) {
+			App->Width = size.right - size.left;
+			App->Height = size.bottom - size.top;
+
+			Graphics->SetViewport( App->Width, App->Height );
+			App->Listener->Resize();
+		}
+		break;
+	}
 	case WM_CREATE:
 
 		break;
@@ -50,9 +68,11 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 	}
 
 	LVP::App = this;
-	LVP::Graphics = new DXGraphics(MainWindow, true);
+	Graphics = new DXGraphics( MainWindow, true );
+	LVP::Graphics = Graphics;
+
 	Input = new WinInput();
-	Input->ResetCursor(MainWindow);
+	Input->ResetCursor( MainWindow );
 	LVP::Input = Input;
 
 	// todo
@@ -78,6 +98,12 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 			case WM_KEYUP:
 				Input->Keys[Msg.wParam] = false;
 				break;
+			case WM_LBUTTONDOWN:
+				if ( LVP::Input->CatchMouse == false ) {
+					LVP::Input->CatchMouse = true;
+					ShowCursor( FALSE );
+				}
+				break;
 			case WM_MOUSEMOVE:
 			{
 				/*Input->LastMousePosX = Input->MousePosX;
@@ -100,10 +126,10 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 		QueryPerformanceCounter( (LARGE_INTEGER*)&currTimeStamp );
 		float dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
 
-		Input->Update(MainWindow);
+		Input->Update( MainWindow );
 
 		Listener->Update( dt );
-		LVP::Graphics->Render(Listener);
+		LVP::Graphics->Render( Listener );
 
 		prevTimeStamp = currTimeStamp;
 	}

@@ -7,4 +7,6 @@ public:
 	virtual void Update(float delta) = 0;
 
 	virtual void Render( ) = 0;
+
+	virtual void Resize() = 0;
 };

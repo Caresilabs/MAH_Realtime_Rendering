@@ -2,14 +2,12 @@
 #include "WinInput.h"
 
 WinInput::WinInput() : LastMousePosX( -1 ), LastMousePosY( -1 ), MousePosX( -1 ), MousePosY( -1 ) {
-	ShowCursor( FALSE );
 }
 
 void WinInput::Update( HWND window ) {
 	POINT Point = { 0 };
 	if ( GetCursorPos( &Point ) ) {
 		if ( ScreenToClient( window, &Point ) ) {
-
 			MousePosX = Point.x;
 			MousePosY = Point.y;
 		}
@@ -19,6 +17,9 @@ void WinInput::Update( HWND window ) {
 }
 
 void WinInput::ResetCursor( HWND window ) {
+	if ( !CatchMouse )
+		return;
+
 	POINT Point = { 100, 100 };
 	LastMousePosX = Point.x;
 	LastMousePosY = Point.y;

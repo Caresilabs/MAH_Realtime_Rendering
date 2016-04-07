@@ -6,8 +6,7 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Shaders/ShaderProgram.h"
 
-class MyGame :
-	public ApplicationListener {
+class MyGame : public ApplicationListener {
 public:
 	MyGame();
 	~MyGame();
@@ -16,10 +15,13 @@ public:
 	virtual void Start() override;
 	virtual void Update( float delta ) override;
 	virtual void Render() override;
+	virtual void Resize() override;
 
 	Mesh* wheel;
 	MeshInstance* instance;
 	ShaderProgram* shader;
 	Camera* cam;
+
+
 };
 

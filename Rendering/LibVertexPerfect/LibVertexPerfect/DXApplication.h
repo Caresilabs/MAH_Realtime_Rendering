@@ -5,6 +5,7 @@
 #include <windowsx.h>
 #include "Application.h"
 #include "Input/WinInput.h"
+#include "Graphics/DXGraphics.h"
 
 class ApplicationListener;
 
@@ -27,17 +28,17 @@ public:
 	int Play( const DXApplicationConfig& config );
 
 	~DXApplication();
-private:
-	HRESULT					InitWindow( const DXApplicationConfig& config );
 
 	HINSTANCE				MainInstance;
 	HWND					MainWindow;
 
 	ApplicationListener*	Listener;
 
-	WinInput*				Input;
+private:
+	HRESULT					InitWindow( const DXApplicationConfig& config );
 
-	int						Width;
-	int						Height;
+	WinInput*				Input;
+	DXGraphics*				Graphics;
+
 };
 

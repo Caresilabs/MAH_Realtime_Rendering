@@ -90,4 +90,8 @@ public:
 	mat4f GetProjectionMatrix() const {
 		return projectionMatrix;
 	}
+
+	void SetAspectRatio(float value) {
+		aspect = value;
+	}
 };

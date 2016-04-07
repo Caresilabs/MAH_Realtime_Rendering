@@ -10,7 +10,7 @@ void MyGame::Start() {
 	 shader = new ShaderProgram();
 
 	 cam = new Camera( fPI / 4,				/*field-of-view*/
-		 (float)900 / 900,					/*aspect ratio*/
+		 (float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/
 		 .5f,								/*z-near plane (everything closer will be clipped/removed)*/
 		 500.0f );
 	 cam->MoveTo( { 0, 0, 5 } );
@@ -56,6 +56,10 @@ void MyGame::Render() {
 	shader->Render( instance );
 
 	shader->End();
+}
+
+void MyGame::Resize() {
+	cam->SetAspectRatio( LVP::App->Width / (float)LVP::App->Height );
 }
 
 MyGame::~MyGame() {

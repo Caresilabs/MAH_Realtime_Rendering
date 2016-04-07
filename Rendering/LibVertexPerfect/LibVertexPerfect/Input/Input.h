@@ -2,6 +2,9 @@
 
 class Input {
 public:
+
+	bool CatchMouse = false;
+
 	virtual float GetMouseX() = 0;
 	virtual float GetMouseY() = 0;
 

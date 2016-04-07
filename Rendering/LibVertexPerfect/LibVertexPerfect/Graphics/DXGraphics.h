@@ -10,6 +10,8 @@ class DXGraphics :
 public:
 	DXGraphics( HWND& window, bool vsync );
 
+	void SetViewport( int width, int height );
+
 	// Inherited via Graphics
 	virtual void Render(ApplicationListener* listener) override;
 
@@ -23,7 +25,6 @@ public:
 private:
 
 	HRESULT InitDirect3DAndSwapChain( int width, int height );
-	void SetViewport( int width, int height );
 	void InitRasterizerState();
 	HRESULT CreateDepthStencilView( int width, int height );
 	HRESULT CreateRenderTargetView();
