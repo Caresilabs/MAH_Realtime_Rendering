@@ -16,10 +16,12 @@ public:
 	virtual void			Render() override;
 	virtual void			Resize() override;
 
-	VPtr<OBJMesh>			wheel;
-	VPtr<MeshInstance>		instance;
-	VPtr<ShaderProgram>		shader;
-	VPtr<Camera>			camera;
+private:
+
+	VPtr<MeshInstance>		CityInstance;
+	VPtr<MeshInstance>		HandInstance;
+	VPtr<ShaderProgram>		Shader;
+	VPtr<Camera>			Cam;
 
 };
 

@@ -52,7 +52,7 @@ PSIn VS_main(VSIn input)
 	output.Normal = mul(input.Normal, ModelToWorldMatrix);
 
 	if (IsDirectionalLight) {
-		output.LightDir = normalize(-LightPosition.xyz);
+		output.LightDir = normalize(LightPosition.xyz);
 	} else {
 		output.LightDir = normalize( LightPosition.xyz -  mul(float4(input.Pos, 1), ModelToWorldMatrix).xyz);
 	}

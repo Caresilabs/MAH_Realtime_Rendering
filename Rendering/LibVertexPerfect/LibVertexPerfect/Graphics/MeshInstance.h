@@ -5,16 +5,19 @@
 
 class MeshInstance {
 public:
-	MeshInstance( Mesh* mesh );
+	MeshInstance( VPtr<Mesh>& mesh );
 
 	void Render();
 
+	void UpdateTransform();
+
 	mat4f Transform;
-protected:
+
 	vec3f Position;
 	vec3f Rotation;
 	vec3f Scale;
+	
 private:
-	Mesh* MyMesh;
+	VPtr<Mesh> MyMesh;
 };
 

@@ -58,9 +58,8 @@ LRESULT CALLBACK MainWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 }
 
 int DXApplication::Play( const DXApplicationConfig& config ) {
-	//TODO
-	Width = 768;
-	Height = 768;
+	Width = config.width;
+	Height = config.height;
 
 	if ( FAILED( InitWindow( config ) ) ) {
 		return 0;
@@ -71,7 +70,6 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 	LVP::Graphics = Graphics;
 
 	Input = new WinInput();
-	//Input->ResetCursor( MainWindow );
 	LVP::Input = Input;
 
 	// todo
@@ -106,12 +104,6 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 			}
 			case WM_MOUSEMOVE:
 			{
-				/*Input->LastMousePosX = Input->MousePosX;
-				Input->LastMousePosY = Input->MousePosY;
-
-				Input->MousePosX = GET_X_LPARAM( Msg.lParam );
-				Input->MousePosY = GET_Y_LPARAM( Msg.lParam );
-*/
 				break;
 			}
 			default:

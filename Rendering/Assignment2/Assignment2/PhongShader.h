@@ -9,8 +9,6 @@ public:
 
 	virtual void Render( MeshInstance* instance ) override;
 
-	~PhongShader();
-
 private:
 
 	struct PerFrameBufferData {

@@ -15,6 +15,9 @@ struct DXApplicationConfig {
 	LPWSTR lpCmdLine;
 	int nCmdShow;
 
+	int width;
+	int height;
+
 	char* title;
 	char* className;
 

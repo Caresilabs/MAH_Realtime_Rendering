@@ -54,5 +54,3 @@ void PhongShader::Render( MeshInstance* instance ) {
 	instance->Render();
 }
 
-PhongShader::~PhongShader() {
-}

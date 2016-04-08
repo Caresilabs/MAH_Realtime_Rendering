@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "MeshInstance.h"
 
-MeshInstance::MeshInstance( Mesh * mesh ) : MyMesh(mesh), Scale(1,1,1) {
-	Transform = mat4f::rotation( 45, 0.0f, 1.0f, 0.0f );// (mat4f::TRS( Position, 0, Rotation, Scale ));
+MeshInstance::MeshInstance( VPtr<Mesh>& mesh ) : MyMesh( mesh ), Scale( 1, 1, 1 ) {
+	UpdateTransform();
 }
 
 void MeshInstance::Render() {
 	MyMesh->Render();
+}
+
+void MeshInstance::UpdateTransform() {
+	Transform = mat4f::translation( Position ) * mat4f::rotation( Rotation.x, Rotation.y, Rotation.z ) * mat4f::scaling( Scale );
 }

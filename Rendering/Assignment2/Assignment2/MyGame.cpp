@@ -4,17 +4,22 @@ MyGame::MyGame() {
 }
 
 void MyGame::Start() {
-	wheel = new OBJMesh( "../assets/sphere/sphere.obj" );	// new OBJMesh( "../assets/tyre/Tyre.obj" );
-	//wheel = new CubeMesh();
+	VPtr<Mesh> City = new OBJMesh( "../assets/city/city.obj" );
+	VPtr<Mesh> Hand = new OBJMesh( "../assets/hand/hand.obj" );
 
-	instance = new MeshInstance( wheel );
-	shader = new PhongShader();
+	CityInstance = new MeshInstance( City );
 
-	camera = new Camera( fPI / 4,				/*field-of-view*/
+	HandInstance = new MeshInstance( Hand );
+
+	HandInstance->Scale = { 2, 2, 2 };
+
+	Shader = new PhongShader();
+
+	Cam = new Camera( fPI / 4,				/*field-of-view*/
 		(float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/
 		.5f,								/*z-near plane (everything closer will be clipped/removed)*/
 		500.0f );
-	camera->MoveTo( { 0, 0, 5 } );
+	Cam->MoveTo( { 0, 0, 5 } );
 }
 
 void MyGame::Update( float delta ) {
@@ -25,43 +30,45 @@ void MyGame::Update( float delta ) {
 	static float speed = 3;
 
 	if ( LVP::Input->IsKeyDown( 'S' ) ) {
-		camera->MoveForward( -delta * speed );
+		Cam->MoveForward( -delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'W' ) ) {
-		camera->MoveForward( delta * speed );
+		Cam->MoveForward( delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'A' ) ) {
-		camera->MoveSideways( -delta * speed );
+		Cam->MoveSideways( -delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'D' ) ) {
-		camera->MoveSideways( delta * speed );
+		Cam->MoveSideways( delta * speed );
 	}
 
 	if ( LVP::Input->IsKeyDown( 'Q' ) ) {
-		camera->MoveVertical( -delta * speed );
+		Cam->MoveVertical( -delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'E' ) ) {
-		camera->MoveVertical( delta * speed );
+		Cam->MoveVertical( delta * speed );
 	}
 
-	camera->Look( LVP::Input->GetMouseDeltaX() * delta, -LVP::Input->GetMouseDeltaY() *delta );
-	camera->UpdateFrustrum();
+	Cam->Look( LVP::Input->GetMouseDeltaX() * delta, -LVP::Input->GetMouseDeltaY() *delta );
+	Cam->UpdateFrustrum();
 
 
-	instance->Transform = instance->Transform * mat4f::rotation( delta, { 0, 1, 0 } );
-
+	HandInstance->Rotation.y += delta;
+	HandInstance->UpdateTransform();
 }
 
 void MyGame::Render() {
 	LVP::Graphics->ClearScreen( 0.2f, 0.5f, 0.3f );
 
-	shader->Begin( *camera );
+	Shader->Begin( *Cam );
 
-	shader->Render( instance );
+	Shader->Render( HandInstance );
 
-	shader->End();
+	Shader->Render( CityInstance );
+
+	Shader->End();
 }
 
 void MyGame::Resize() {
-	camera->SetAspectRatio( LVP::App->Width / (float)LVP::App->Height );
+	Cam->SetAspectRatio( LVP::App->Width / (float)LVP::App->Height );
 }

@@ -14,6 +14,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 	config.className = "Assignment2";
 	config.title = "My Cool Phong Shader";
+	config.width = 1280;
+	config.height = 720;
 	config.app = new MyGame();
 
 	int code = app->Play( config );
