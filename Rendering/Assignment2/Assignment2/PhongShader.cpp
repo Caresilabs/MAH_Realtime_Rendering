@@ -37,7 +37,7 @@ void PhongShader::Begin( Camera& camera ) {
 		frameCBuffer->ProjectionMatrix = linalg::transpose( camera.GetProjectionMatrix() );
 		frameCBuffer->WorldToViewMatrix = linalg::transpose( camera.GetWorldToViewMatrix() );
 
-		frameCBuffer->IsDirectionalLight = true;
+		frameCBuffer->IsDirectionalLight = false;
 		frameCBuffer->LightPosition = vec4f( 10, 10, 10, 0 );
 		frameCBuffer->ViewDirection = vec4f(camera.GetDirection(), 0);
 	}

@@ -4,6 +4,8 @@
 #include "Graphics/Graphics.h"
 #include "Input/Input.h"
 
+#include "VPtr.h"
+
 class LVP {
 public:
 	static Application* App;

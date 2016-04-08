@@ -100,7 +100,7 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 			case WM_LBUTTONDOWN:
 			{
 				// Bad
-				//Input->ResetCursor( MainWindow );
+				Input->ResetCursor( MainWindow );
 				Input->SetCatchMouse( true );
 				break;
 			}

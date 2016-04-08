@@ -75,7 +75,7 @@
     <ClInclude Include="Input\WinInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Shaders\PhongShader.h">
+    <ClInclude Include="VPtr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -114,9 +114,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\WinInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Shaders\PhongShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

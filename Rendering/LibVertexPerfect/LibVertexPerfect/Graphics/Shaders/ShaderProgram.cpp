@@ -105,9 +105,8 @@ bool ShaderProgram::CompileShader( char * shaderFile, char * pEntrypoint, char *
 #endif
 		SAFE_RELEASE( pErrorBlob );
 
-		return true; // todo
-}
-	return true;
+	}
+	return *pCompiledShader != nullptr;
 }
 
 void ShaderProgram::Compile( const ShaderConfig& config ) {

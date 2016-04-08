@@ -7,7 +7,7 @@ WinInput::WinInput() : LastMousePosX( -1 ), LastMousePosY( -1 ), MousePosX( -1 )
 void WinInput::Update( HWND window ) {
 	if ( CatchMouse ) {
 
-	
+
 		POINT Point = { 0 };
 		if ( GetCursorPos( &Point ) ) {
 			if ( ScreenToClient( window, &Point ) ) {
@@ -18,17 +18,18 @@ void WinInput::Update( HWND window ) {
 
 		ResetCursor( window );
 
+
 		/*if ( LastMousePosX == -1 )
 			LastMousePosX = MousePosX;
 		if ( LastMousePosY == -1 )
 			LastMousePosY = MousePosY;*/
 
-		
+
 	}
 }
 
 void WinInput::ResetCursor( HWND window ) {
-	POINT Point = { 100, 100 };
+	POINT Point = { LVP::App->Width / 2, LVP::App->Height / 2 };
 	LastMousePosX = Point.x;
 	LastMousePosY = Point.y;
 	if ( ClientToScreen( window, &Point ) ) {

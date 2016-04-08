@@ -19,4 +19,4 @@
 #include "targetver.h"
 #include "LVP.h"
 #include <string>
-
+#include "VPtr.h"

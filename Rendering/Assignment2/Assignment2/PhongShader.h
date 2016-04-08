@@ -1,5 +1,5 @@
 #pragma once
-#include "ShaderProgram.h"
+#include "Graphics/Shaders/ShaderProgram.h"
 
 class PhongShader : public ShaderProgram {
 public:

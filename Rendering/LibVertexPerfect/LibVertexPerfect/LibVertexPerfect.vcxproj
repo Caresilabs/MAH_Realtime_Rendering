@@ -156,10 +156,10 @@
     <ClInclude Include="Graphics\MeshInstance.h" />
     <ClInclude Include="Graphics\Shaders\ShaderProgram.h" />
     <ClInclude Include="Graphics\OBJLoader.h" />
-    <ClInclude Include="Graphics\Shaders\PhongShader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Input\WinInput.h" />
+    <ClInclude Include="VPtr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics\Camera.cpp" />
@@ -172,7 +172,6 @@
     <ClCompile Include="Graphics\MeshInstance.cpp" />
     <ClCompile Include="Graphics\Shaders\ShaderProgram.cpp" />
     <ClCompile Include="Graphics\OBJLoader.cpp" />
-    <ClCompile Include="Graphics\Shaders\PhongShader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
