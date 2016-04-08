@@ -17,6 +17,8 @@ public:
 	virtual float GetMouseDeltaX() override;
 	virtual float GetMouseDeltaY() override;
 
+	virtual void SetCatchMouse( bool val ) override;
+
 	bool IsKeyDown( char key );
 
 	bool Keys[256] = { 0 };
@@ -26,5 +28,6 @@ public:
 
 	float LastMousePosX;
 	float LastMousePosY;
+
 };
 

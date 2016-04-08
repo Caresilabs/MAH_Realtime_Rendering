@@ -7,7 +7,7 @@ void MyGame::Start() {
 	//wheel = new OBJMesh( "../assets/tyre/Tyre.obj" );
 	wheel = new CubeMesh();
 	 instance = new MeshInstance( wheel );
-	 shader = new ShaderProgram();
+	 shader = new PhongShader();
 
 	 cam = new Camera( fPI / 4,				/*field-of-view*/
 		 (float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/
@@ -25,7 +25,6 @@ void MyGame::Update( float delta ) {
 	if ( LVP::Input->IsKeyDown( 'W' ) ) {
 		cam->MoveForward( delta * speed );
 	}
-
 	if ( LVP::Input->IsKeyDown( 'A' ) ) {
 		cam->MoveSideways( -delta * speed );
 	}
@@ -45,11 +44,10 @@ void MyGame::Update( float delta ) {
 	cam->UpdateFrustrum();
 	instance->Transform = instance->Transform * mat4f::rotation( delta, { 0, 1, 0 } );
 
-
 }
 
 void MyGame::Render() {
-	LVP::Graphics->ClearScreen( 1, 0.5f, 0 );
+	LVP::Graphics->ClearScreen( 0.2f, 0.5f, 0 );
 
 	shader->Begin(*cam);
 

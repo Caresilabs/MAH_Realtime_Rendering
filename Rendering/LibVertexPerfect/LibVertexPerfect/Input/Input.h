@@ -3,7 +3,7 @@
 class Input {
 public:
 
-	bool CatchMouse = false;
+	virtual void SetCatchMouse( bool val ) = 0;
 
 	virtual float GetMouseX() = 0;
 	virtual float GetMouseY() = 0;
@@ -12,5 +12,8 @@ public:
 	virtual float GetMouseDeltaY() = 0;
 
 	virtual bool IsKeyDown( char key ) = 0;
+
+protected:
+	bool CatchMouse = false;
 
 };

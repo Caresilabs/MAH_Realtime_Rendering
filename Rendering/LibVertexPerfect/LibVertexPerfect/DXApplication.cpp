@@ -19,8 +19,7 @@ LRESULT CALLBACK MainWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
 		break;
 	case WM_KILLFOCUS:
-		LVP::Input->CatchMouse = false;
-		ShowCursor( TRUE );
+		LVP::Input->SetCatchMouse( false );
 		break;
 	case WM_SIZING:
 	{
@@ -72,7 +71,7 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 	LVP::Graphics = Graphics;
 
 	Input = new WinInput();
-	Input->ResetCursor( MainWindow );
+	//Input->ResetCursor( MainWindow );
 	LVP::Input = Input;
 
 	// todo
@@ -99,11 +98,12 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 				Input->Keys[Msg.wParam] = false;
 				break;
 			case WM_LBUTTONDOWN:
-				if ( LVP::Input->CatchMouse == false ) {
-					LVP::Input->CatchMouse = true;
-					ShowCursor( FALSE );
-				}
+			{
+				// Bad
+				//Input->ResetCursor( MainWindow );
+				Input->SetCatchMouse( true );
 				break;
+			}
 			case WM_MOUSEMOVE:
 			{
 				/*Input->LastMousePosX = Input->MousePosX;

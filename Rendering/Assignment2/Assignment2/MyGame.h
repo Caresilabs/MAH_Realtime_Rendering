@@ -4,7 +4,7 @@
 #include "LVP.h"
 
 #include "Graphics/Mesh.h"
-#include "Graphics/Shaders/ShaderProgram.h"
+#include "Graphics/Shaders/PhongShader.h"
 
 class MyGame : public ApplicationListener {
 public:

@@ -5,21 +5,29 @@ WinInput::WinInput() : LastMousePosX( -1 ), LastMousePosY( -1 ), MousePosX( -1 )
 }
 
 void WinInput::Update( HWND window ) {
-	POINT Point = { 0 };
-	if ( GetCursorPos( &Point ) ) {
-		if ( ScreenToClient( window, &Point ) ) {
-			MousePosX = Point.x;
-			MousePosY = Point.y;
-		}
-	}
+	if ( CatchMouse ) {
 
-	ResetCursor(window);
+	
+		POINT Point = { 0 };
+		if ( GetCursorPos( &Point ) ) {
+			if ( ScreenToClient( window, &Point ) ) {
+				MousePosX = Point.x;
+				MousePosY = Point.y;
+			}
+		}
+
+		ResetCursor( window );
+
+		/*if ( LastMousePosX == -1 )
+			LastMousePosX = MousePosX;
+		if ( LastMousePosY == -1 )
+			LastMousePosY = MousePosY;*/
+
+		
+	}
 }
 
 void WinInput::ResetCursor( HWND window ) {
-	if ( !CatchMouse )
-		return;
-
 	POINT Point = { 100, 100 };
 	LastMousePosX = Point.x;
 	LastMousePosY = Point.y;
@@ -46,5 +54,19 @@ float WinInput::GetMouseDeltaY() {
 
 bool WinInput::IsKeyDown( char key ) {
 	return Keys[key];
+}
+
+void WinInput::SetCatchMouse( bool val ) {
+	if ( val == CatchMouse )
+		return;
+
+	CatchMouse = val;
+
+	if ( CatchMouse ) {
+		ShowCursor( FALSE );
+	} else {
+		ShowCursor( TRUE );
+	}
+
 }
 

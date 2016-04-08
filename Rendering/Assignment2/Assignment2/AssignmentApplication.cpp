@@ -12,8 +12,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	config.lpCmdLine = lpCmdLine;
 	config.nCmdShow = nCmdShow;
 
-	config.className = "Tester";
-	config.title = "My Title";
+	config.className = "Assignment2";
+	config.title = "My Cool Phong Shader";
 	config.app = new MyGame();
 
 	int code = app->Play( config );
