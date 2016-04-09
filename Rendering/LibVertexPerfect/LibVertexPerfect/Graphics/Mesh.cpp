@@ -88,7 +88,7 @@ OBJMesh::OBJMesh( const std::string & file ) {
 	SAFE_DELETE( mesh );
 }
 
-void OBJMesh::Render() const {
+void OBJMesh::Render( ShaderProgram& shader ) const {
 	//set topology
 	DeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
@@ -107,6 +107,8 @@ void OBJMesh::Render() const {
 		// fetch material and bind texture
 		const material_t& mtl = materials[irange.MaterialIndex];
 		DeviceContext->PSSetShaderResources( 0, 1, &mtl.map_Kd_TexSRV );
+
+		shader.RenderDrawcall(mtl);
 
 		// make the drawcall
 		DeviceContext->DrawIndexed( irange.size, irange.start, 0 );
@@ -197,7 +199,7 @@ CubeMesh::CubeMesh( ) {
 	indices.clear();
 }
 
-void CubeMesh::Render(  ) const {
+void CubeMesh::Render( ShaderProgram& shader ) const {
 	//set topology
 	DeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 

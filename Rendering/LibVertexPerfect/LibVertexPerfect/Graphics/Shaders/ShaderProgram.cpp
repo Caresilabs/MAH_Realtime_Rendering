@@ -24,40 +24,22 @@ void ShaderProgram::Begin( Camera & camera ) {
 	DeviceContext->PSSetShader( PixelShader, nullptr, 0 );
 
 	for ( auto& buffer : CBuffers ) {
-		DeviceContext->VSSetConstantBuffers( buffer.first, 1, &buffer.second.Buffer );
+		switch ( buffer.second.Type ) {
+		case ShaderType::VERTEX:
+			DeviceContext->VSSetConstantBuffers( buffer.first, 1, &buffer.second.Buffer );
+			break;
+		case ShaderType::FRAGMENT:
+			DeviceContext->PSSetConstantBuffers( buffer.first, 1, &buffer.second.Buffer );
+			break;
+		default:
+			break;
+		}
 	}
-
 }
 
 
 void ShaderProgram::End() {
 }
-
-//void ShaderProgram::MapMatrixBuffers( ID3D11DeviceContext * device_context, mat4f ModelToWorldMatrix, mat4f WorldToViewMatrix, mat4f ProjectionMatrix ) {
-//	// map the resource buffer, obtain a pointer to it and then write our matrices to it
-//	D3D11_MAPPED_SUBRESOURCE resource;
-//	device_context->Map( MatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource );
-//	MatrixBuffer_t* matrix_buffer_ = (MatrixBuffer_t*)resource.pData;
-//	matrix_buffer_->ModelToWorldMatrix = linalg::transpose( ModelToWorldMatrix );
-//	matrix_buffer_->WorldToViewMatrix = linalg::transpose( WorldToViewMatrix );
-//	matrix_buffer_->ProjectionMatrix = linalg::transpose( ProjectionMatrix );
-//	device_context->Unmap( MatrixBuffer, 0 );
-//}
-
-//void ShaderProgram::InitShaderBuffers() {
-//	HRESULT hr;
-//
-//	// Matrix buffer
-//	D3D11_BUFFER_DESC MatrixBuffer_desc = { 0 };
-//	MatrixBuffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-//	MatrixBuffer_desc.ByteWidth = sizeof( MatrixBuffer_t );
-//	MatrixBuffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-//	MatrixBuffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-//	MatrixBuffer_desc.MiscFlags = 0;
-//	MatrixBuffer_desc.StructureByteStride = 0;
-//
-//	ASSERT( hr = static_cast<DXGraphics*>(LVP::Graphics)->Device->CreateBuffer( &MatrixBuffer_desc, nullptr, &MatrixBuffer ) );
-//}
 
 ShaderProgram::~ShaderProgram() {
 	for ( auto& buffer : CBuffers ) {

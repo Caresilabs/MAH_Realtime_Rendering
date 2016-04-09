@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics/Shaders/ShaderProgram.h"
+#include "Graphics/MeshInstance.h"
 
 class PhongShader : public ShaderProgram {
 public:
@@ -7,7 +8,9 @@ public:
 	
 	virtual void Begin( Camera& camera ) override;
 
-	virtual void Render( MeshInstance* instance ) override;
+	virtual void RenderObject( MeshInstance* instance ) override;
+
+	virtual void RenderDrawcall( const material_t& material ) override;
 
 private:
 
@@ -24,6 +27,18 @@ private:
 	struct PerObjectBufferData {
 		mat4f ModelToWorldMatrix;
 	};
+
+	struct PerDrawcallCBufferData {
+		vec3f Ka;
+		float Pad1;
+		
+		vec3f Kd;
+		float Pad2;
+
+		vec3f Ks;
+		float Pad3;
+	};
+
 
 };
 

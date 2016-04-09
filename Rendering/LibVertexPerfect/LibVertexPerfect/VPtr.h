@@ -43,6 +43,10 @@ public:
 		return Object;
 	}
 
+	operator T&() const {
+		return *Object;
+	}
+
 	~VPtr() {
 		(*References)--;
 

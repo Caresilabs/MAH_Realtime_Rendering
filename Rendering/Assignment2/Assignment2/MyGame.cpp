@@ -1,19 +1,21 @@
 #include "MyGame.h"
 
+
 MyGame::MyGame() {
 }
 
 void MyGame::Start() {
+	Shader = new PhongShader();
+
+
 	VPtr<Mesh> City = new OBJMesh( "../assets/city/city.obj" );
-	VPtr<Mesh> Hand = new OBJMesh( "../assets/hand/hand.obj" );
+	VPtr<Mesh> Hand = new OBJMesh( "../assets/carbody/carbody.obj" );
 
 	CityInstance = new MeshInstance( City );
 
 	HandInstance = new MeshInstance( Hand );
 
 	HandInstance->Scale = { 2, 2, 2 };
-
-	Shader = new PhongShader();
 
 	Cam = new Camera( fPI / 4,				/*field-of-view*/
 		(float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/
@@ -62,9 +64,9 @@ void MyGame::Render() {
 
 	Shader->Begin( *Cam );
 
-	Shader->Render( HandInstance );
+	HandInstance->Render( Shader );
 
-	Shader->Render( CityInstance );
+	CityInstance->Render( Shader );
 
 	Shader->End();
 }

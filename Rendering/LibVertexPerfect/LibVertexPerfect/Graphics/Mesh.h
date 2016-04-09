@@ -2,12 +2,13 @@
 #include <D3D11.h>
 #include <vector>
 #include "DrawCall.h"
+#include "Shaders/ShaderProgram.h"
 
 class Mesh {
 public:
 	Mesh();
 
-	virtual void Render() const = 0;
+	virtual void Render( ShaderProgram& shader ) const = 0;
 
 	virtual ~Mesh();
 
@@ -26,7 +27,7 @@ public:
 
 	OBJMesh( const std::string& file );
 
-	void Render() const override;
+	void Render( ShaderProgram& shader ) const override;
 
 private:
 
@@ -51,7 +52,7 @@ public:
 
 	CubeMesh();
 
-	void Render() const override;
+	void Render( ShaderProgram& shader ) const override;
 
 private:
 	void CreateFace( vec3f p0, vec3f p1, vec3f p2, vec3f p3, vec3f normal );

@@ -27,6 +27,7 @@ PhongShader::PhongShader() {
 
 	AddCBuffer<PerFrameBufferData>();
 	AddCBuffer<PerObjectBufferData>();
+	AddCBuffer<PerDrawcallCBufferData>(ShaderType::FRAGMENT);
 }
 
 void PhongShader::Begin( Camera& camera ) {
@@ -39,18 +40,27 @@ void PhongShader::Begin( Camera& camera ) {
 
 		frameCBuffer->IsDirectionalLight = false;
 		frameCBuffer->LightPosition = vec4f( 10, 10, 10, 0 );
-		frameCBuffer->ViewDirection = vec4f(camera.GetDirection(), 0);
+		frameCBuffer->ViewDirection = vec4f( camera.GetDirection(), 0 );
 	}
 	FlushCBuffer( 0 );
 }
 
-void PhongShader::Render( MeshInstance* instance ) {
+
+void PhongShader::RenderObject( MeshInstance* instance ) {
 	PerObjectBufferData* objectCBuffer = GetCBuffer<PerObjectBufferData>( 1 );
 	{
 		objectCBuffer->ModelToWorldMatrix = linalg::transpose( instance->Transform );
 	}
 	FlushCBuffer( 1 );
+}
 
-	instance->Render();
+void PhongShader::RenderDrawcall( const material_t& material ) {
+	PerDrawcallCBufferData* drawCBuffer = GetCBuffer<PerDrawcallCBufferData>( 2 );
+	{
+		drawCBuffer->Ka = material.Ka;
+		drawCBuffer->Kd = material.Kd;
+		drawCBuffer->Ks = material.Ks;
+	}
+	FlushCBuffer( 2 );
 }
 

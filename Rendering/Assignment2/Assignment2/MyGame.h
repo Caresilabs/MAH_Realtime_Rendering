@@ -2,9 +2,8 @@
 
 #include "ApplicationListener.h"
 #include "LVP.h"
-
-#include "Graphics/Mesh.h"
 #include "PhongShader.h"
+#include "Graphics/MeshInstance.h"
 
 class MyGame : public ApplicationListener {
 public:

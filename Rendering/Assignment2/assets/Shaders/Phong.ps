@@ -1,4 +1,13 @@
 
+cbuffer PerObjectBuffer : register(b2)
+{
+	float3 Ka;
+	//-- 1 byte pad
+	float3 Kd;
+	//-- 1 byte pad
+	float3 Ks;
+};
+
 struct PSIn
 {
 	float4 Pos  : SV_Position;
@@ -14,11 +23,11 @@ struct PSIn
 float4 PS_main(PSIn input) : SV_Target
 {	
 
-	float4 ambient = float4(0.3, 0.1, 0.1, 1);
-	float4 diffuse = max(0, dot(input.Normal, input.LightDir)) * float4(0, 1, 0, 1);
+	float3 ambient = Ka;
+	float3 diffuse = max(0, dot(input.Normal, input.LightDir)) * Kd;
 
 	float specPow = 10.0;
-	float4 specular = pow( max(0, dot(reflect(input.LightDir, input.Normal), input.ViewDir)), specPow) * float4(0.6, 0.6, 0.6, 1);
+	float3 specular = pow( max(0, dot(reflect(input.LightDir, input.Normal), input.ViewDir)), specPow) * Ks;
 
-	return ambient + diffuse + specular ;
+	return float4(ambient + diffuse + specular, 1);
 }

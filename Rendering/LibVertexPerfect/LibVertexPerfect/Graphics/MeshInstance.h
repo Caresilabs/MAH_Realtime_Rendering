@@ -3,11 +3,13 @@
 #include "../Math/vec.h"
 #include "../Math/mat.h"
 
+class ShaderProgram;
+
 class MeshInstance {
 public:
 	MeshInstance( VPtr<Mesh>& mesh );
 
-	void Render();
+	void Render( ShaderProgram& shader );
 
 	void UpdateTransform();
 
@@ -16,7 +18,7 @@ public:
 	vec3f Position;
 	vec3f Rotation;
 	vec3f Scale;
-	
+
 private:
 	VPtr<Mesh> MyMesh;
 };

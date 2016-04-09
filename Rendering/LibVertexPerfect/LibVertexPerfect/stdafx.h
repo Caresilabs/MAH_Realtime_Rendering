@@ -17,6 +17,8 @@
 #pragma comment(lib, "dxguid.lib")
 
 #include "targetver.h"
-#include "LVP.h"
 #include <string>
+
+#include "LVP.h"
 #include "VPtr.h"
+#include "Graphics/Shaders/ShaderProgram.h"
