@@ -8,6 +8,7 @@ cbuffer PerFrameBuffer : register(b0)
 	float4 ViewDirection;
 
 	bool   IsDirectionalLight;
+	float3 Pad;
 };
 
 cbuffer PerObjectBuffer : register(b1)
@@ -54,9 +55,10 @@ PSIn VS_main(VSIn input)
 	if (IsDirectionalLight) {
 		output.LightDir = normalize(LightPosition.xyz);
 	} else {
-		output.LightDir = normalize( LightPosition.xyz -  mul(float4(input.Pos, 1), ModelToWorldMatrix).xyz);
+		output.LightDir = normalize(  LightPosition.xyz -  mul(float4(input.Pos, 1), ModelToWorldMatrix).xyz);
 	}
-	output.ViewDir = normalize(ViewDirection).xyz;
+
+	output.ViewDir = normalize(ViewDirection.xyz);
 
 	return output;
 }

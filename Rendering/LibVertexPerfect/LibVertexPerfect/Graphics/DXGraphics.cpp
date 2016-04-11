@@ -1,10 +1,7 @@
 #include "stdafx.h"
 #include "DXGraphics.h"
 
-DXGraphics::DXGraphics(HWND& window, bool vsync) : MainWindow(window) {
-	float width = 768;
-	float height = 768;
-
+DXGraphics::DXGraphics(HWND& window, int width, int height, bool vsync) : MainWindow(window) {
 	HRESULT hr = S_OK;
 
 	if ( SUCCEEDED( hr = InitDirect3DAndSwapChain( width, height ) ) ) {
@@ -30,7 +27,7 @@ void DXGraphics::Render(ApplicationListener* listener) {
 }
 
 void DXGraphics::ClearScreen( float r, float g, float b ) {
-	float ClearColor[4] = { r, g, b, 1 };
+	static float ClearColor[4] = { 0, 0, 0, 1 };
 	DeviceContext->ClearRenderTargetView( RenderTargetView, ClearColor );
 
 	DeviceContext->ClearDepthStencilView( DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
@@ -103,7 +100,7 @@ void DXGraphics::InitRasterizerState() {
 	D3D11_RASTERIZER_DESC rasterizerState;
 	rasterizerState.FillMode = D3D11_FILL_SOLID;
 	rasterizerState.CullMode = D3D11_CULL_BACK;
-	rasterizerState.FrontCounterClockwise = false;
+	rasterizerState.FrontCounterClockwise = true;
 	rasterizerState.DepthBias = false;
 	rasterizerState.DepthBiasClamp = 0;
 	rasterizerState.SlopeScaledDepthBias = 0;

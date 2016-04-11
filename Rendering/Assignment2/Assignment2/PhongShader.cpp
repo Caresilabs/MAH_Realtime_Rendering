@@ -25,9 +25,9 @@ PhongShader::PhongShader() {
 
 	Compile( config );
 
-	AddCBuffer<PerFrameBufferData>();
-	AddCBuffer<PerObjectBufferData>();
-	AddCBuffer<PerDrawcallCBufferData>(ShaderType::FRAGMENT);
+	AddCBuffer<PerFrameBufferData>( ShaderType::VERTEX );
+	AddCBuffer<PerObjectBufferData>( ShaderType::VERTEX );
+	AddCBuffer<PerDrawcallCBufferData>( ShaderType::FRAGMENT );
 }
 
 void PhongShader::Begin( Camera& camera ) {

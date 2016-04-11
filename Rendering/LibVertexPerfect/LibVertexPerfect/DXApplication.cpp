@@ -61,12 +61,18 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 	Width = config.width;
 	Height = config.height;
 
+	// Console
+	AllocConsole();
+	freopen( "conin$", "r", stdin );
+	freopen( "conout$", "w", stdout );
+	freopen( "conout$", "w", stderr );
+
 	if ( FAILED( InitWindow( config ) ) ) {
 		return 0;
 	}
 
 	LVP::App = this;
-	Graphics = new DXGraphics( MainWindow, true );
+	Graphics = new DXGraphics( MainWindow, Width, Height, true );
 	LVP::Graphics = Graphics;
 
 	Input = new WinInput();
@@ -125,6 +131,8 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 
 		prevTimeStamp = currTimeStamp;
 	}
+
+	FreeConsole();
 
 }
 

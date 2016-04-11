@@ -7,15 +7,15 @@ MyGame::MyGame() {
 void MyGame::Start() {
 	Shader = new PhongShader();
 
-
-	VPtr<Mesh> City = new OBJMesh( "../assets/city/city.obj" );
-	VPtr<Mesh> Hand = new OBJMesh( "../assets/carbody/carbody.obj" );
+	VPtr<Mesh> City = new OBJMesh( "../assets/carbody/carbody.obj" );
+	VPtr<Mesh> Hand = new OBJMesh( "../assets/hand/hand.obj" );
 
 	CityInstance = new MeshInstance( City );
 
 	HandInstance = new MeshInstance( Hand );
 
 	HandInstance->Scale = { 2, 2, 2 };
+	HandInstance->Position.y = 3;
 
 	Cam = new Camera( fPI / 4,				/*field-of-view*/
 		(float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/
@@ -29,7 +29,7 @@ void MyGame::Update( float delta ) {
 	if ( LVP::Input->IsKeyDown( VK_ESCAPE ) )
 		LVP::Input->SetCatchMouse( false );
 
-	static float speed = 3;
+	static float speed = 4.5f;
 
 	if ( LVP::Input->IsKeyDown( 'S' ) ) {
 		Cam->MoveForward( -delta * speed );

@@ -8,10 +8,6 @@
 #include "OBJLoader.h"
 #include <algorithm>
 
-
-#define MESH_FORCE_CCW
-#define MESH_SORT_DRAWCALLS
-
 void MeshData::LoadMtl( std::string path, std::string filename, mtl_hash_t & mtl_hash ) {
 	std::string fullpath = path + filename;
 

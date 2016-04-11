@@ -8,7 +8,7 @@
 class DXGraphics :
 	public Graphics {
 public:
-	DXGraphics( HWND& window, bool vsync );
+	DXGraphics( HWND& window, int width, int height, bool vsync );
 
 	void SetViewport( int width, int height );
 

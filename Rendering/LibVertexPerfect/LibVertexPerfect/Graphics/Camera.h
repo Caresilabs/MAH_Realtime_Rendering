@@ -41,7 +41,7 @@ public:
 	mat4f LookAtMatrix() const;
 
 	mat4f GetWorldToViewMatrix() const {
-		return  invViewMatrix;
+		return invViewMatrix;
 	}
 
 	mat4f GetProjectionMatrix() const {

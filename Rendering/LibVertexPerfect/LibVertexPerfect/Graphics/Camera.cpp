@@ -6,7 +6,7 @@ Camera::Camera(
 	float aspect,
 	float zNear,
 	float zFar ) :
-	vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 2 ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
+	vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 1 ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
 }
 
 void Camera::MoveTo( const vec3f & p ) {
@@ -18,7 +18,7 @@ void Camera::Move( const vec3f & v ) {
 }
 
 void Camera::MoveSideways( float speed ) {
-	auto side = up % direction;
+	auto side = direction % up;
 
 	position += side * speed;
 }
@@ -40,11 +40,12 @@ void Camera::Look( float horizontal, float vertical ) {
 	if ( horizontal == 0 && vertical == 0 )
 		return;
 
-	float hz = horizontal * mouseSense;
-	float vz = vertical * mouseSense;
+	float hz = -horizontal * mouseSense;
+	float vz = -vertical * mouseSense;
 
 	direction = mat3f::rotation( hz, up.x, up.y, up.z ) * direction;
-	auto tmp = (direction % up).normalize();
+
+	auto tmp = (up % direction).normalize();
 	direction = mat3f::rotation( vz, tmp.x, tmp.y, tmp.z ) * direction;
 	direction.normalize();
 
@@ -53,17 +54,22 @@ void Camera::Look( float horizontal, float vertical ) {
 mat4f Camera::LookAtMatrix() const {
 	vec3f tempDir = -direction;
 
-	vec3f right = tempDir % up;
+	vec3f right = up %  tempDir;
 	right.normalize();
 
-	vec3f realUp = right % tempDir;
+	vec3f realUp = tempDir % right;
 	realUp.normalize();
 
-	mat4f mat;
+	mat4f mat( right.x, realUp.x, tempDir.x, 0.f,
+		right.y, realUp.y, tempDir.y, 0.f,
+		right.z, realUp.z, tempDir.z, 0.f,
+		0.f, 0.f, 0.f, 1.0f					///-linalg::dot( right, position ), -linalg::dot( realUp, position ), -linalg::dot( tempDir, position )
+	);
 
-	mat.col[0] = vec4f( right.x, right.y, right.z, 0 );
-	mat.col[1] = vec4f( realUp.x, realUp.y, realUp.z, 0 );
-	mat.col[2] = vec4f( tempDir.x, tempDir.y, tempDir.z, 0 );
-	mat.col[3] = vec4f( position.x, position.y, position.z, 1 );
-	return mat;
+	//mat.col[0] = vec4f( right.x, right.y, right.z, 0 );
+	//mat.col[1] = vec4f( realUp.x, realUp.y, realUp.z, 0 );
+	//mat.col[2] = vec4f( -tempDir.x,- tempDir.y, -tempDir.z, 0 );
+	//mat.col[3] = vec4f( -position.x, -position.y, -position.z, 1 );
+
+	return   mat4f::translation( position ) * mat;
 }

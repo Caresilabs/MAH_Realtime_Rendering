@@ -10,6 +10,9 @@
 #include "DrawCall.h"
 #include "parseutil.h"
 
+using linalg::vec3f;
+using linalg::vec3ui;
+
 #define MESH_FORCE_CCW
 #define MESH_SORT_DRAWCALLS
 // note: all these formats *should* supposedly be supported by DirectXTex ...
