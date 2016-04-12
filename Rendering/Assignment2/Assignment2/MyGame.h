@@ -19,6 +19,8 @@ private:
 
 	VPtr<MeshInstance>		CityInstance;
 	VPtr<MeshInstance>		HandInstance;
+	VPtr<MeshInstance>		SphereInstance;
+	
 	VPtr<ShaderProgram>		Shader;
 	VPtr<Camera>			Cam;
 

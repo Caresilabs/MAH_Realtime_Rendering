@@ -28,10 +28,31 @@ PhongShader::PhongShader() {
 	AddCBuffer<PerFrameBufferData>( ShaderType::VERTEX );
 	AddCBuffer<PerObjectBufferData>( ShaderType::VERTEX );
 	AddCBuffer<PerDrawcallCBufferData>( ShaderType::FRAGMENT );
+
+	// Init sampler state
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory( &samplerDesc, sizeof( samplerDesc ) );
+
+	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MaxAnisotropy = 4;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = -FLT_MAX;
+	samplerDesc.MaxLOD = FLT_MAX;
+
+	auto Device = static_cast<DXGraphics*>(LVP::Graphics)->Device;
+	auto hr = Device->CreateSamplerState( &samplerDesc, &SamplerState );
+	if ( FAILED( hr ) ) {
+		MessageBoxA( nullptr, "Failed to create texture sampler.", "Error", MB_OK | MB_ICONERROR );
+	}
 }
 
 void PhongShader::Begin( Camera& camera ) {
 	ShaderProgram::Begin( camera );
+
+	DeviceContext->PSSetSamplers( 0, 1, &SamplerState );
 
 	PerFrameBufferData* frameCBuffer = GetCBuffer<PerFrameBufferData>( 0 );
 	{
@@ -57,10 +78,14 @@ void PhongShader::RenderObject( MeshInstance* instance ) {
 void PhongShader::RenderDrawcall( const material_t& material ) {
 	PerDrawcallCBufferData* drawCBuffer = GetCBuffer<PerDrawcallCBufferData>( 2 );
 	{
+		drawCBuffer->UseTexture = material.map_Kd_TexSRV != nullptr;
 		drawCBuffer->Ka = material.Ka;
 		drawCBuffer->Kd = material.Kd;
 		drawCBuffer->Ks = material.Ks;
 	}
 	FlushCBuffer( 2 );
+
+	if (material.map_Kd_TexSRV != nullptr )
+		DeviceContext->PSSetShaderResources( 0, 1, &material.map_Kd_TexSRV );
 }
 

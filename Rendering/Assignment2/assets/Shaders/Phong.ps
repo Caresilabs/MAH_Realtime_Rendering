@@ -1,8 +1,8 @@
 
 cbuffer PerObjectBuffer : register(b2)
 {
+	bool   UseTexture;
 	float3 Ka;
-	float1 Pad1;
 
 	float3 Kd;
 	float1 Pad2;
@@ -20,9 +20,9 @@ struct PSIn
 	float3 ViewDir : VIEWDIR;
 };
 
-//-----------------------------------------------------------------------------------------
-// PixelShader: PSSceneMain
-//-----------------------------------------------------------------------------------------
+Texture2D DiffuseTexture : register(t0);
+sampler Sampler : register(s0);
+
 float4 PS_main(PSIn input) : SV_Target
 {	
 	// Arrange
@@ -34,12 +34,16 @@ float4 PS_main(PSIn input) : SV_Target
 	float3 ambient = Ka;
 
 	// Diffuse
-	float3 diffuse = max(0, dot(normal, lightDir)) *  Kd;
+	float3 diffuse;
+	if (UseTexture) {
+		diffuse = max(0, dot(normal, lightDir)) * Kd * DiffuseTexture.Sample(Sampler, input.TexCoord);
+	} else {
+		diffuse = max(0, dot(normal, lightDir)) * Kd;
+	}
 
 	// Specular
 	float specPow = 12.0;
 	float3 specular = pow( max(0, dot(-reflect(lightDir, normal), -viewDir)), specPow) * Ks;
 
-	//return float4 (normal*0.5 + 0.5, 1);
 	return float4(ambient + diffuse + specular, 1);
 }

@@ -106,7 +106,6 @@ void OBJMesh::Render( ShaderProgram& shader ) const {
 	for ( auto& irange : index_ranges ) {
 		// fetch material and bind texture
 		const material_t& mtl = materials[irange.MaterialIndex];
-		DeviceContext->PSSetShaderResources( 0, 1, &mtl.map_Kd_TexSRV );
 
 		shader.RenderDrawcall(mtl);
 

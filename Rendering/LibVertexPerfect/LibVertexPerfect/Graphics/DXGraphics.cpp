@@ -27,7 +27,7 @@ void DXGraphics::Render(ApplicationListener* listener) {
 }
 
 void DXGraphics::ClearScreen( float r, float g, float b ) {
-	static float ClearColor[4] = { 0, 0, 0, 1 };
+	static float ClearColor[4] = { r, g, b, 1 };
 	DeviceContext->ClearRenderTargetView( RenderTargetView, ClearColor );
 
 	DeviceContext->ClearDepthStencilView( DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );

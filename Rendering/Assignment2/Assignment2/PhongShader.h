@@ -14,6 +14,8 @@ public:
 
 private:
 
+	ID3D11SamplerState* SamplerState;
+
 	struct PerFrameBufferData {
 		mat4f WorldToViewMatrix;
 		mat4f ProjectionMatrix;
@@ -29,8 +31,8 @@ private:
 	};
 
 	struct PerDrawcallCBufferData {
+		int	  UseTexture;
 		vec3f Ka;
-		float Pad1;
 		
 		vec3f Kd;
 		float Pad2;
