@@ -32,7 +32,7 @@ void Camera::MoveForward( float speed ) {
 }
 
 void Camera::UpdateFrustrum() {
-	invViewMatrix = (LookAtMatrix().inverse());
+	invViewMatrix = (LookAtMatrix());
 	projectionMatrix = mat4f::projection( vfov, aspect, zNear, zFar );
 }
 
@@ -61,15 +61,10 @@ mat4f Camera::LookAtMatrix() const {
 	realUp.normalize();
 
 	mat4f mat( right.x, realUp.x, tempDir.x, 0.f,
-		right.y, realUp.y, tempDir.y, 0.f,
-		right.z, realUp.z, tempDir.z, 0.f,
-		0.f, 0.f, 0.f, 1.0f					///-linalg::dot( right, position ), -linalg::dot( realUp, position ), -linalg::dot( tempDir, position )
+			right.y, realUp.y, tempDir.y, 0.f,
+			right.z, realUp.z, tempDir.z, 0.f,
+			0.f, 0.f, 0.f, 1.0f					///-linalg::dot( right, position ), -linalg::dot( realUp, position ), -linalg::dot( tempDir, position )
 	);
 
-	//mat.col[0] = vec4f( right.x, right.y, right.z, 0 );
-	//mat.col[1] = vec4f( realUp.x, realUp.y, realUp.z, 0 );
-	//mat.col[2] = vec4f( -tempDir.x,- tempDir.y, -tempDir.z, 0 );
-	//mat.col[3] = vec4f( -position.x, -position.y, -position.z, 1 );
-
-	return   mat4f::translation( position ) * mat;
+	return   linalg::transpose( mat ) * mat4f::translation(- position ) ;
 }
