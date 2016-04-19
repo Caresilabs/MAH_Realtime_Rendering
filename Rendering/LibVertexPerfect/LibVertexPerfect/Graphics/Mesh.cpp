@@ -1,9 +1,7 @@
 #include "stdafx.h"
-
 #include "Mesh.h"
 #include "DXGraphics.h"
 #include "OBJLoader.h"
-
 #include "WICTextureLoader.h"
 
 Mesh::Mesh() {
@@ -75,11 +73,18 @@ OBJMesh::OBJMesh( const std::string & file ) {
 		HRESULT hr;
 		std::wstring wstr; // for conversion from string to wstring
 
-						   // Kd_map
+		// Kd_map
 		if ( mtl.map_Kd.size() ) {
 			wstr = std::wstring( mtl.map_Kd.begin(), mtl.map_Kd.end() );
 			hr = DirectX::CreateWICTextureFromFile( Device, wstr.c_str(), &mtl.map_Kd_Tex, &mtl.map_Kd_TexSRV );
 			printf( "loading texture %s - %s\n", mtl.map_Kd.c_str(), SUCCEEDED( hr ) ? "OK" : "FAILED" );
+		}
+
+		// Ks_map
+		if ( mtl.map_Ks.size() ) {
+			wstr = std::wstring( mtl.map_Ks.begin(), mtl.map_Ks.end() );
+			hr = DirectX::CreateWICTextureFromFile( Device, wstr.c_str(), &mtl.map_Ks_Tex, &mtl.map_Ks_TexSRV );
+			printf( "loading texture %s - %s\n", mtl.map_Ks.c_str(), SUCCEEDED( hr ) ? "OK" : "FAILED" );
 		}
 
 		// other maps here...
@@ -113,7 +118,6 @@ void OBJMesh::Render( ShaderProgram& shader ) const {
 		DeviceContext->DrawIndexed( irange.size, irange.start, 0 );
 	}
 }
-
 
 
 void CubeMesh::CreateFace( vec3f p0, vec3f p1, vec3f p2, vec3f p3, vec3f normal ) {

@@ -1,13 +1,12 @@
 #include "MyGame.h"
 
-
 MyGame::MyGame() {
 }
 
 void MyGame::Start() {
 	Shader = new PhongShader();
 
-	VPtr<Mesh> City = new OBJMesh( "../assets/city/city.obj" );
+	VPtr<Mesh> City = new OBJMesh( "../assets/sponza2/sponza.obj" );
 	VPtr<Mesh> Hand = new OBJMesh( "../assets/hand/hand.obj" );
 	VPtr<Mesh> Sphere = new OBJMesh( "../assets/tyre/tyre.obj" );
 
@@ -15,6 +14,8 @@ void MyGame::Start() {
 	SphereInstance->Position.y = 1.9f;
 
 	CityInstance = new MeshInstance( City );
+	CityInstance->Scale = { 0.01f, 0.01f, 0.01f };
+	CityInstance->UpdateTransform();
 
 	HandInstance = new MeshInstance( Hand );
 	HandInstance->Scale = { 2, 2, 2 };
@@ -70,7 +71,7 @@ void MyGame::Update( float delta ) {
 }
 
 void MyGame::Render() {
-	LVP::Graphics->ClearScreen( 0.2f, 0.5f, 0.3f );
+	LVP::Graphics->ClearScreen( 0.0f, 0.3f, 0.8f );
 
 	Shader->Begin( *Cam );
 	{

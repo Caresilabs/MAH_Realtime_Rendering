@@ -5,6 +5,7 @@
 //  CJG 2016, cjgribel@gmail.com
 //
 
+#include "../stdafx.h"
 #include <D3D11.h>
 #include <iostream>
 #include <vector>
@@ -29,10 +30,22 @@ struct material_t {
 	std::string name;		// material name
 	std::string map_Kd;		// file path
 	std::string map_bump;	// file path
+	std::string map_Ks;		// file path
 
 							// device texture pointers
 	ID3D11ShaderResourceView*	map_Kd_TexSRV = nullptr;
 	ID3D11Resource*				map_Kd_Tex = nullptr;
+
+	ID3D11ShaderResourceView*	map_Ks_TexSRV = nullptr;
+	ID3D11Resource*				map_Ks_Tex = nullptr;
+
+	~material_t() {
+		SAFE_RELEASE( map_Kd_Tex );
+		SAFE_RELEASE( map_Kd_TexSRV );
+
+		SAFE_RELEASE( map_Ks_Tex );
+		SAFE_RELEASE( map_Ks_TexSRV );
+	}
 };
 
 static material_t default_mtl = material_t();

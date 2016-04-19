@@ -37,7 +37,7 @@ PhongShader::PhongShader() {
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.MaxAnisotropy = 4;
+	samplerDesc.MaxAnisotropy = 8;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	samplerDesc.MinLOD = -FLT_MAX;
 	samplerDesc.MaxLOD = FLT_MAX;
@@ -60,7 +60,7 @@ void PhongShader::Begin( Camera& camera ) {
 		frameCBuffer->WorldToViewMatrix = linalg::transpose( camera.GetWorldToViewMatrix() );
 
 		frameCBuffer->IsDirectionalLight = false;
-		frameCBuffer->LightPosition = vec4f( 10, 10, 10, 0 );
+		frameCBuffer->LightPosition = vec4f( 0, 7, 0, 0 );
 		frameCBuffer->ViewDirection = vec4f( camera.GetDirection(), 0 );
 	}
 	FlushCBuffer( 0 );
@@ -78,7 +78,9 @@ void PhongShader::RenderObject( MeshInstance* instance ) {
 void PhongShader::RenderDrawcall( const material_t& material ) {
 	PerDrawcallCBufferData* drawCBuffer = GetCBuffer<PerDrawcallCBufferData>( 2 );
 	{
-		drawCBuffer->UseTexture = material.map_Kd_TexSRV != nullptr;
+		drawCBuffer->KdUseTexture = material.map_Kd_TexSRV != nullptr;
+		drawCBuffer->KsUseTexture = material.map_Ks_TexSRV != nullptr;
+
 		drawCBuffer->Ka = material.Ka;
 		drawCBuffer->Kd = material.Kd;
 		drawCBuffer->Ks = material.Ks;
@@ -87,5 +89,8 @@ void PhongShader::RenderDrawcall( const material_t& material ) {
 
 	if (material.map_Kd_TexSRV != nullptr )
 		DeviceContext->PSSetShaderResources( 0, 1, &material.map_Kd_TexSRV );
+
+	if ( material.map_Ks_TexSRV != nullptr )
+		DeviceContext->PSSetShaderResources( 1, 1, &material.map_Ks_TexSRV );
 }
 

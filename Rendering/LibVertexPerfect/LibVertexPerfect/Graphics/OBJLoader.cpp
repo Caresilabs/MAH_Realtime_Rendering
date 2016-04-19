@@ -23,6 +23,8 @@ void MeshData::LoadMtl( std::string path, std::string filename, mtl_hash_t & mtl
 		char str0[1024] = { 0 }, str1[1024];
 		float a, b, c;
 
+		line.erase( std::remove( line.begin(), line.end(), '\t' ), line.end() );
+
 		if ( sscanf( line.c_str(), "newmtl %s", str0 ) == 1 ) {
 			// check for duplicate
 			if ( mtl_hash.find( str0 ) != mtl_hash.end() ) printf( "warning: duplicate material '%s'\n", str0 );
@@ -40,6 +42,13 @@ void MeshData::LoadMtl( std::string path, std::string filename, mtl_hash_t & mtl
 				current_mtl->map_Kd = path + mapfile;
 			else
 				throw std::runtime_error( std::string( "error: no allowed format found for 'map_Kd' in material " ) + current_mtl->name );
+		} else if ( sscanf( line.c_str(), "map_Ks %[^\n]", str0 ) == 1 ) {
+			// search for the image file and ignore the rest
+			std::string mapfile;
+			if ( find_filename_from_suffixes( str0, ALLOWED_TEXTURE_SUFFIXES, mapfile ) )
+				current_mtl->map_Ks = path + mapfile;
+			else
+				throw std::runtime_error( std::string( "error: no allowed format found for 'map_Ks' in material " ) + current_mtl->name );
 		} else if ( sscanf( line.c_str(), "map_bump %[^\n]", str0 ) == 1 ) {
 			// search for the image file and ignore the rest
 			std::string mapfile;

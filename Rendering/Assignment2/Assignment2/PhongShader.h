@@ -5,7 +5,7 @@
 class PhongShader : public ShaderProgram {
 public:
 	PhongShader();
-	
+
 	virtual void Begin( Camera& camera ) override;
 
 	virtual void RenderObject( MeshInstance* instance ) override;
@@ -23,7 +23,7 @@ private:
 		vec4f ViewDirection;
 		int   IsDirectionalLight;
 		vec3f Padding;
-		
+
 	};
 
 	struct PerObjectBufferData {
@@ -31,14 +31,15 @@ private:
 	};
 
 	struct PerDrawcallCBufferData {
-		int	  UseTexture;
+
 		vec3f Ka;
-		
+		int	  KaUseTexture;
+
 		vec3f Kd;
-		float Pad2;
+		int	  KdUseTexture;
 
 		vec3f Ks;
-		float Pad3;
+		int	  KsUseTexture;
 	};
 
 
