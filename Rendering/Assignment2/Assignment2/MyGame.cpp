@@ -6,9 +6,9 @@ MyGame::MyGame() {
 void MyGame::Start() {
 	Shader = new PhongShader();
 
-	VPtr<Mesh> City = new OBJMesh( "../assets/sponza2/sponza.obj" );
-	VPtr<Mesh> Hand = new OBJMesh( "../assets/hand/hand.obj" );
-	VPtr<Mesh> Sphere = new OBJMesh( "../assets/tyre/tyre.obj" );
+	VPtr<Mesh> City = new OBJMesh( "assets/sponza2/sponza.obj" );
+	VPtr<Mesh> Hand = new OBJMesh( "assets/hand/hand.obj" );
+	VPtr<Mesh> Sphere = new OBJMesh( "assets/tyre/tyre.obj" );
 
 	SphereInstance = new MeshInstance( Sphere );
 	SphereInstance->Position.y = 1.9f;

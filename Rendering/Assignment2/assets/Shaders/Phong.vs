@@ -5,7 +5,7 @@ cbuffer PerFrameBuffer : register(b0)
 	matrix ProjectionMatrix;
 
 	float4 LightPosition;
-	float4 ViewDirection;
+	float4 CameraPosition;
 
 	bool   IsDirectionalLight;
 	float3 Pad;
@@ -49,13 +49,15 @@ PSIn VS_main(VSIn input)
 	// Phong
 	output.Normal = mul(input.Normal, ModelToWorldMatrix);
 
+	float3 worldPos =  mul(float4(input.Pos, 1), ModelToWorldMatrix).xyz;
+
 	if (IsDirectionalLight) {
 		output.LightDir = normalize(LightPosition.xyz);
 	} else {
-		output.LightDir = normalize(  LightPosition.xyz -  mul(float4(input.Pos, 1), ModelToWorldMatrix).xyz);
+		output.LightDir = normalize(  LightPosition.xyz - worldPos );
 	}
 
-	output.ViewDir = normalize(ViewDirection.xyz);
+	output.ViewDir = normalize(worldPos - CameraPosition.xyz );
 
 	return output;
 }

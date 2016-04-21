@@ -52,7 +52,11 @@ public:
 		aspect = value;
 	}
 
-	vec3f GetDirection() const {
+	const vec3f& GetDirection() const {
 		return direction;
+	}
+
+	const vec3f& GetPosition() const {
+		return position;
 	}
 };

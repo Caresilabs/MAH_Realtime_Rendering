@@ -12,11 +12,11 @@ PhongShader::PhongShader() {
 	};
 
 	ShaderConfig config = { 0 };
-	config.VertexFilePath = "../assets/Shaders/Phong.vs";
+	config.VertexFilePath = "assets/Shaders/Phong.vs";
 	config.VertexEntrypoint = "VS_main";
 	config.VertexTarget = "vs_5_0";
 
-	config.PixelFilePath = "../assets/Shaders/Phong.ps";
+	config.PixelFilePath = "assets/Shaders/Phong.ps";
 	config.PixelEntrypoint = "PS_main";
 	config.PixelTarget = "ps_5_0";
 
@@ -61,7 +61,7 @@ void PhongShader::Begin( Camera& camera ) {
 
 		frameCBuffer->IsDirectionalLight = false;
 		frameCBuffer->LightPosition = vec4f( 0, 7, 0, 0 );
-		frameCBuffer->ViewDirection = vec4f( camera.GetDirection(), 0 );
+		frameCBuffer->CameraPosition = vec4f( camera.GetPosition(), 1 );
 	}
 	FlushCBuffer( 0 );
 }

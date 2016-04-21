@@ -20,7 +20,7 @@ private:
 		mat4f WorldToViewMatrix;
 		mat4f ProjectionMatrix;
 		vec4f LightPosition;
-		vec4f ViewDirection;
+		vec4f CameraPosition;
 		int   IsDirectionalLight;
 		vec3f Padding;
 
