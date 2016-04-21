@@ -31,6 +31,7 @@ struct material_t {
 	std::string map_Kd;		// file path
 	std::string map_bump;	// file path
 	std::string map_Ks;		// file path
+	std::string map_mask;	// file path
 
 							// device texture pointers
 	ID3D11ShaderResourceView*	map_Kd_TexSRV = nullptr;
@@ -39,12 +40,24 @@ struct material_t {
 	ID3D11ShaderResourceView*	map_Ks_TexSRV = nullptr;
 	ID3D11Resource*				map_Ks_Tex = nullptr;
 
+	ID3D11ShaderResourceView*	map_Normal_TexSRV = nullptr;
+	ID3D11Resource*				map_Normal_Tex = nullptr;
+
+	ID3D11ShaderResourceView*	map_Mask_TexSRV = nullptr;
+	ID3D11Resource*				map_Mask_Tex = nullptr;
+
 	~material_t() {
 		SAFE_RELEASE( map_Kd_Tex );
 		SAFE_RELEASE( map_Kd_TexSRV );
 
 		SAFE_RELEASE( map_Ks_Tex );
 		SAFE_RELEASE( map_Ks_TexSRV );
+
+		SAFE_RELEASE( map_Normal_Tex );
+		SAFE_RELEASE( map_Normal_TexSRV );
+
+		SAFE_RELEASE( map_Mask_Tex );
+		SAFE_RELEASE( map_Mask_TexSRV );
 	}
 };
 

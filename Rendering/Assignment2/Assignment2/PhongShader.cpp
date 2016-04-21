@@ -60,7 +60,7 @@ void PhongShader::Begin( Camera& camera ) {
 		frameCBuffer->WorldToViewMatrix = linalg::transpose( camera.GetWorldToViewMatrix() );
 
 		frameCBuffer->IsDirectionalLight = false;
-		frameCBuffer->LightPosition = vec4f( 0, 7, 0, 0 );
+		frameCBuffer->LightPosition = vec4f(0.2f, 4, 0.2f, 0); //vec4f( 0, 7, 0, 0 );
 		frameCBuffer->CameraPosition = vec4f( camera.GetPosition(), 1 );
 	}
 	FlushCBuffer( 0 );
@@ -80,6 +80,8 @@ void PhongShader::RenderDrawcall( const material_t& material ) {
 	{
 		drawCBuffer->KdUseTexture = material.map_Kd_TexSRV != nullptr;
 		drawCBuffer->KsUseTexture = material.map_Ks_TexSRV != nullptr;
+		drawCBuffer->NormalUseTexture = material.map_Normal_TexSRV != nullptr;
+		drawCBuffer->MaskUseTexture = material.map_Mask_TexSRV != nullptr;
 
 		drawCBuffer->Ka = material.Ka;
 		drawCBuffer->Kd = material.Kd;
@@ -92,5 +94,11 @@ void PhongShader::RenderDrawcall( const material_t& material ) {
 
 	if ( material.map_Ks_TexSRV != nullptr )
 		DeviceContext->PSSetShaderResources( 1, 1, &material.map_Ks_TexSRV );
+
+	if ( material.map_Normal_TexSRV != nullptr )
+		DeviceContext->PSSetShaderResources( 2, 1, &material.map_Normal_TexSRV );
+
+	if ( material.map_Mask_TexSRV != nullptr )
+		DeviceContext->PSSetShaderResources( 3, 1, &material.map_Mask_TexSRV );
 }
 

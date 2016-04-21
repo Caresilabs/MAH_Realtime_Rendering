@@ -40,6 +40,11 @@ private:
 
 		vec3f Ks;
 		int	  KsUseTexture;
+
+		int	  NormalUseTexture;
+		int	  MaskUseTexture;
+
+		vec2f Pad;
 	};
 
 

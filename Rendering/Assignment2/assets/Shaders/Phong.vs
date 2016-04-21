@@ -16,6 +16,7 @@ cbuffer PerObjectBuffer : register(b1)
 	matrix ModelToWorldMatrix;
 };
 
+
 struct VSIn
 {
 	float3 Pos : POSITION;
@@ -28,10 +29,11 @@ struct VSIn
 struct PSIn
 {
 	float4 Pos  : SV_Position;
-	float3 Normal : NORMAL;
+	float3x3 Normals : NORMALS;
 	float2 TexCoord : TEX;
-	float3 LightDir : LIGHTDIR;
-	float3 ViewDir : VIEWDIR;
+	float3 LightPos : LIGHTPOS;
+	float3 WorldPos : WORLDPOS;
+	float3 CameraPos : CAMERAPOS;
 };
 
 PSIn VS_main(VSIn input)
@@ -47,17 +49,20 @@ PSIn VS_main(VSIn input)
 	output.TexCoord = input.TexCoord;
 
 	// Phong
-	output.Normal = mul(input.Normal, ModelToWorldMatrix);
+	output.Normals[0] = mul(input.Tangent, ModelToWorldMatrix);
+	output.Normals[1] = mul(input.Binormal, ModelToWorldMatrix);
+	output.Normals[2] = mul(input.Normal, ModelToWorldMatrix);
 
 	float3 worldPos =  mul(float4(input.Pos, 1), ModelToWorldMatrix).xyz;
 
 	if (IsDirectionalLight) {
-		output.LightDir = normalize(LightPosition.xyz);
+		output.LightPos = normalize( LightPosition.xyz );
 	} else {
-		output.LightDir = normalize(  LightPosition.xyz - worldPos );
+		output.LightPos = (  LightPosition.xyz  );
 	}
 
-	output.ViewDir = normalize(worldPos - CameraPosition.xyz );
+	output.WorldPos = worldPos;
+	output.CameraPos = CameraPosition;
 
 	return output;
 }

@@ -11,7 +11,7 @@ void MyGame::Start() {
 	VPtr<Mesh> Sphere = new OBJMesh( "assets/tyre/tyre.obj" );
 
 	SphereInstance = new MeshInstance( Sphere );
-	SphereInstance->Position.y = 1.9f;
+	SphereInstance->Position.y = 1.2f;
 
 	CityInstance = new MeshInstance( City );
 	CityInstance->Scale = { 0.01f, 0.01f, 0.01f };
@@ -19,7 +19,7 @@ void MyGame::Start() {
 
 	HandInstance = new MeshInstance( Hand );
 	HandInstance->Scale = { 2, 2, 2 };
-	HandInstance->Position.y = 3;
+	HandInstance->Position.y = 2;
 
 	Cam = new Camera( fPI / 4,				/*field-of-view*/
 		(float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/

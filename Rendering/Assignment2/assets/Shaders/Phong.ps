@@ -9,47 +9,70 @@ cbuffer PerObjectBuffer : register(b2)
 
 	float3 Ks;
 	bool   KsUseTexture;
+
+	int	  NormalUseTexture;
+	int	  MaskUseTexture;
+
+	float2 Pad;
 };
 
 struct PSIn
 {
 	float4 Pos  : SV_Position;
-	float3 Normal : NORMAL;
+	float3x3 Normals : NORMALS;
 	float2 TexCoord : TEX;
-	float3 LightDir : LIGHTDIR;
-	float3 ViewDir : VIEWDIR;
+	float3 LightPos : LIGHTPOS;
+	float3 WorldPos : WORLDPOS;
+	float3 CameraPos : CAMERAPOS;
 };
 
 Texture2D DiffuseTexture : register(t0);
 Texture2D SpecularTexture : register(t1);
+Texture2D NormalTexture : register(t2);
+Texture2D MaskTexture : register(t3);
 sampler Sampler : register(s0);
 
 float4 PS_main(PSIn input) : SV_Target
 {	
-	// Arrange
-	float3 normal = normalize(input.Normal);
-	float3 lightDir = normalize(input.LightDir);
-	float3 viewDir = normalize(input.ViewDir);
+	// Mask
+	if (MaskUseTexture) {
+		if (MaskTexture.Sample(Sampler, input.TexCoord).x == 0) {
+			discard;
+		}
+	}
+
+	// Normal
+	float3 normal;
+	if (NormalUseTexture) {
+		float3 texNormal = 2.0f * NormalTexture.Sample(Sampler, input.TexCoord) - 1.0f;
+		normal =  normalize(mul(texNormal, input.Normals ));
+	} else {
+		normal = normalize(input.Normals[2]);
+	}
+	
+	 
+	float3 lightDir = normalize(  input.LightPos - input.WorldPos );
+	
+	float3 viewDir = normalize( input.CameraPos - input.WorldPos );
 
 	// Diffuse
 	float3 diffuse;
 	if (KdUseTexture) {
-		//diffuse += max(0, dot(normal, lightDir)) * Kd;
-
 		diffuse = DiffuseTexture.Sample(Sampler, input.TexCoord) * Kd;
-		diffuse *= max(0, dot(normal, lightDir)) + Ka; //DiffuseTexture.Sample(Sampler, input.TexCoord);
+		diffuse *= max(0, dot(normal, lightDir)) + Ka;					//DiffuseTexture.Sample(Sampler, input.TexCoord);
 	} else {
 		diffuse = Ka + ( max(0, dot(normal, lightDir))) * Kd;
 	}
 
 	// Specular
-	float specPow = 90.0;
+	float specPow = 30.0;
 	float3 specular;
 	if (KsUseTexture) {
-		specular = pow( max(0, dot(-reflect(lightDir, normal), -viewDir)), specPow) * SpecularTexture.Sample(Sampler, input.TexCoord).xxx;
+		specular = pow( max(0, dot(-reflect(lightDir, normal), viewDir)), specPow) * SpecularTexture.Sample(Sampler, input.TexCoord).xxx;
 	 } else {
-		specular = pow( max(0, dot(-reflect(lightDir, normal), -viewDir)), specPow) * Ks;
+		specular = pow( max(0, dot(-reflect(lightDir, normal), viewDir)), specPow) * Ks;
 	 }
 
+	// return float4(normal,1);
 	return float4( diffuse + specular, 1);
 }

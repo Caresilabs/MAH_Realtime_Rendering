@@ -49,6 +49,13 @@ void MeshData::LoadMtl( std::string path, std::string filename, mtl_hash_t & mtl
 				current_mtl->map_Ks = path + mapfile;
 			else
 				throw std::runtime_error( std::string( "error: no allowed format found for 'map_Ks' in material " ) + current_mtl->name );
+		} else if ( sscanf( line.c_str(), "map_d %[^\n]", str0 ) == 1 ) {
+			// search for the image file and ignore the rest
+			std::string mapfile;
+			if ( find_filename_from_suffixes( str0, ALLOWED_TEXTURE_SUFFIXES, mapfile ) )
+				current_mtl->map_mask = path + mapfile;
+			else
+				throw std::runtime_error( std::string( "error: no allowed format found for 'map_mask' in material " ) + current_mtl->name );
 		} else if ( sscanf( line.c_str(), "map_bump %[^\n]", str0 ) == 1 ) {
 			// search for the image file and ignore the rest
 			std::string mapfile;
@@ -134,12 +141,12 @@ void MeshData::LoadObj( const std::string & filename, bool auto_generate_normals
 		// 3D texel (not supported: ignore last component)
 		//
 		else if ( sscanf( line.c_str(), "vt %f %f %f", &x, &y, &z ) == 3 ) {
-			file_texcoords.push_back( vec2f( x, y ) );
+			file_texcoords.push_back( vec2f( x,1.0 - y ) );
 		}
 		// 2D texel
 		//
 		else if ( sscanf( line.c_str(), "vt %f %f", &x, &y ) == 2 ) {
-			file_texcoords.push_back( vec2f( x, y ) );
+			file_texcoords.push_back( vec2f( x, 1.0 - y ) );
 		}
 		// normal
 		//
@@ -284,6 +291,17 @@ void MeshData::LoadObj( const std::string & filename, bool auto_generate_normals
 					v.Pos = file_vertices[i3.x];
 					if ( i3.y > -1 ) v.Normal = file_normals[i3.y];
 					if ( i3.z > -1 ) v.TexCoord = file_texcoords[i3.z];
+
+					// bi and tan
+					vec3f c1 =  v.Normal % vec3f( 0.0, 0.0, 1.0 );
+					vec3f c2 = v.Normal % vec3f( 0.0, 1.0, 0.0 );
+					if ( c1.norm2() > c2.norm2() ) {
+						v.Tangent = c1.normalize();
+					} else {
+						v.Tangent = c2.normalize();
+					}
+					v.Binormal = ( v.Normal % v.Tangent).normalize();
+
 
 					wtri.vi[i] = (unsigned)vertices.size();
 					index3_to_index_hash[i3] = (unsigned)(vertices.size());

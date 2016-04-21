@@ -87,6 +87,20 @@ OBJMesh::OBJMesh( const std::string & file ) {
 			printf( "loading texture %s - %s\n", mtl.map_Ks.c_str(), SUCCEEDED( hr ) ? "OK" : "FAILED" );
 		}
 
+		// Normal_map
+		if ( mtl.map_bump.size() ) {
+			wstr = std::wstring( mtl.map_bump.begin(), mtl.map_bump.end() );
+			hr = DirectX::CreateWICTextureFromFile( Device, wstr.c_str(), &mtl.map_Normal_Tex, &mtl.map_Normal_TexSRV );
+			printf( "loading texture %s - %s\n", mtl.map_bump.c_str(), SUCCEEDED( hr ) ? "OK" : "FAILED" );
+		}
+
+		// Mask
+		if ( mtl.map_mask.size() ) {
+			wstr = std::wstring( mtl.map_mask.begin(), mtl.map_mask.end() );
+			hr = DirectX::CreateWICTextureFromFile( Device, wstr.c_str(), &mtl.map_Mask_Tex, &mtl.map_Mask_TexSRV );
+			printf( "loading texture %s - %s\n", mtl.map_mask.c_str(), SUCCEEDED( hr ) ? "OK" : "FAILED" );
+		}
+
 		// other maps here...
 	}
 
