@@ -19,7 +19,7 @@ void MyGame::Start() {
 
 	HandInstance = new MeshInstance( Hand );
 	HandInstance->Scale = { 2, 2, 2 };
-	HandInstance->Position.y = 2;
+	HandInstance->Position.y = 0.5f;
 
 	Cam = new Camera( fPI / 4,				/*field-of-view*/
 		(float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/
@@ -71,7 +71,7 @@ void MyGame::Update( float delta ) {
 }
 
 void MyGame::Render() {
-	LVP::Graphics->ClearScreen( 0.0f, 0.3f, 0.8f );
+	LVP::Graphics->ClearScreen( 0.0f, 0.4f, 0.8f );
 
 	Shader->Begin( *Cam );
 	{
@@ -79,7 +79,7 @@ void MyGame::Render() {
 
 		CityInstance->Render( Shader );
 
-		SphereInstance->Render( Shader );
+		//SphereInstance->Render( Shader );
 	}
 	Shader->End();
 }
