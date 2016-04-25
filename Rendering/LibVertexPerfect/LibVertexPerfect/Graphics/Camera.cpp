@@ -6,7 +6,7 @@ Camera::Camera(
 	float aspect,
 	float zNear,
 	float zFar ) :
-	vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 0.8f ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
+	vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 0.5f ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
 }
 
 void Camera::MoveTo( const vec3f & p ) {

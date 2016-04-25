@@ -53,10 +53,12 @@ float4 PS_main(PSIn input) : SV_Target
 	float3 lightDir = normalize(  input.LightPos - input.WorldPos );
 	float3 viewDir = normalize( input.CameraPos - input.WorldPos );
 
+	float texScale = 1.0f;
+
 	// Diffuse
 	float3 diffuse;
 	if (KdUseTexture) {
-		diffuse = DiffuseTexture.Sample(Sampler, input.TexCoord) * Kd;
+		diffuse = DiffuseTexture.Sample(Sampler, input.TexCoord * texScale) * Kd;
 		diffuse *= max(0, dot(normal, lightDir)) + Ka;				
 	} else {
 		diffuse = Ka + ( max(0, dot(normal, lightDir))) * Kd;
