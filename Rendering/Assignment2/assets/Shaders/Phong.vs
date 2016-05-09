@@ -48,7 +48,7 @@ PSIn VS_main(VSIn input)
 	output.Pos = mul(float4(input.Pos, 1), MVP);
 	output.TexCoord = input.TexCoord;
 
-	// Phong
+	// Normals (TBN)
 	output.Normals[0] = mul(input.Tangent, ModelToWorldMatrix);
 	output.Normals[1] = mul(input.Binormal, ModelToWorldMatrix);
 	output.Normals[2] = mul(input.Normal, ModelToWorldMatrix);

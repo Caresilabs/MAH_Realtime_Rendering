@@ -13,7 +13,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	config.nCmdShow = nCmdShow;
 
 	config.className = "Assignment2";
-	config.title = "My Cool Phong Shader";
+	config.title = "LVP Tech-Demo #DevMode";
 	config.width = 1280;
 	config.height = 720;
 	config.app = new MyGame();

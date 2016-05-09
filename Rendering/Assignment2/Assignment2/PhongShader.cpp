@@ -80,7 +80,7 @@ void PhongShader::RenderDrawcall( const material_t& material ) {
 	{
 		drawCBuffer->KdUseTexture = material.map_Kd_TexSRV != nullptr;
 		drawCBuffer->KsUseTexture = material.map_Ks_TexSRV != nullptr;
-		drawCBuffer->NormalUseTexture = material.map_Normal_TexSRV != nullptr;
+		drawCBuffer->NormalUseTexture = material.map_Normal_TexSRV != nullptr && !LVP::Input->IsKeyDown( 'R' );
 		drawCBuffer->MaskUseTexture = material.map_Mask_TexSRV != nullptr;
 
 		drawCBuffer->Ka = material.Ka;

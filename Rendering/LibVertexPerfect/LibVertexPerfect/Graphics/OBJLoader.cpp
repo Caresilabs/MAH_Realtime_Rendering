@@ -141,7 +141,7 @@ void MeshData::LoadObj( const std::string & filename, bool auto_generate_normals
 		// 3D texel (not supported: ignore last component)
 		//
 		else if ( sscanf( line.c_str(), "vt %f %f %f", &x, &y, &z ) == 3 ) {
-			file_texcoords.push_back( vec2f( x,1.0 - y ) );
+			file_texcoords.push_back( vec2f( x, 1.0 - y ) );
 		}
 		// 2D texel
 		//
@@ -281,7 +281,7 @@ void MeshData::LoadObj( const std::string & filename, bool auto_generate_normals
 		for ( auto &tri : dc.tris ) {
 			triangle_t wtri;
 
-			for ( int i = 0; i<3; i++ ) {
+			for ( int i = 0; i < 3; i++ ) {
 				int3 i3 = { tri.vi[0 + i], tri.vi[3 + i], tri.vi[6 + i] };
 
 				auto s = index3_to_index_hash.find( i3 );
@@ -293,6 +293,7 @@ void MeshData::LoadObj( const std::string & filename, bool auto_generate_normals
 					if ( i3.z > -1 ) v.TexCoord = file_texcoords[i3.z];
 
 					// bi and tan
+					/*
 					vec3f c1 =  v.Normal % vec3f( 0.0, 0.0, 1.0 );
 					vec3f c2 = v.Normal % vec3f( 0.0, 1.0, 0.0 );
 					if ( c1.norm2() > c2.norm2() ) {
@@ -301,7 +302,7 @@ void MeshData::LoadObj( const std::string & filename, bool auto_generate_normals
 						v.Tangent = c2.normalize();
 					}
 					v.Binormal = ( v.Normal % v.Tangent).normalize();
-
+					*/
 
 					wtri.vi[i] = (unsigned)vertices.size();
 					index3_to_index_hash[i3] = (unsigned)(vertices.size());
@@ -312,6 +313,30 @@ void MeshData::LoadObj( const std::string & filename, bool auto_generate_normals
 					wtri.vi[i] = s->second;
 				}
 			}
+
+			vertex_t& v0 = vertices[wtri.vi[0]];
+			vertex_t& v1 = vertices[wtri.vi[1]];
+			vertex_t& v2 = vertices[wtri.vi[2]];
+
+			vec3f D = v1.Pos - v0.Pos;
+			vec3f E = v2.Pos - v0.Pos;
+			vec2f F = v1.TexCoord - v0.TexCoord;
+			vec2f G = v2.TexCoord - v0.TexCoord;
+
+			auto DE = mat3f( D, E, { 0, 0, 1 } );
+			DE.transpose();
+
+			float scalar = 1.0f / ((F.x*G.y) - (F.y*G.x));
+
+			auto TB = (mat3f( G.y, -F.y, 0, -G.x, F.x, 0, 0, 0, 1 )  * scalar) * DE;
+			TB.transpose();
+
+			vec3f tangent = TB.column( 0 ).normalize();
+			vec3f binormal = TB.column( 1 ).normalize();
+
+			v0.Tangent = v1.Tangent = v2.Tangent = tangent;
+			v0.Binormal = v1.Binormal = v2.Binormal = binormal;
+
 			wdc.tris.push_back( wtri );
 		}
 
@@ -321,7 +346,7 @@ void MeshData::LoadObj( const std::string & filename, bool auto_generate_normals
 		for ( auto &quad : dc.quads ) {
 			quad_t_ wquad;
 
-			for ( int i = 0; i<4; i++ ) {
+			for ( int i = 0; i < 4; i++ ) {
 				int3 i3 = { quad.vi[0 + i], quad.vi[3 + i], quad.vi[6 + i] };
 
 				auto s = index3_to_index_hash.find( i3 );

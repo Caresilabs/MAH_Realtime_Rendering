@@ -23,7 +23,7 @@ void MyGame::Start() {
 
 	Cam = new Camera( fPI / 4,				/*field-of-view*/
 		(float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/
-		.3f,								/*z-near plane (everything closer will be clipped/removed)*/
+		.1f,								/*z-near plane (everything closer will be clipped/removed)*/
 		500.0f );
 	Cam->MoveTo( { 0, 0, 5 } );
 }
