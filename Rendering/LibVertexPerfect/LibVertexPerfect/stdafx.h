@@ -21,4 +21,5 @@
 
 #include "LVP.h"
 #include "VPtr.h"
+#include "Graphics/FrameBuffer.h"
 #include "Graphics/Shaders/ShaderProgram.h"

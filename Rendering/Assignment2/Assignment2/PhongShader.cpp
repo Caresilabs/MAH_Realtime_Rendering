@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "PhongShader.h"
+#include "Graphics/DXFrameBuffer.h"
 
-
-PhongShader::PhongShader() {
+PhongShader::PhongShader( FrameBuffer* buffer, Camera* shadowCamera ) : ShadowCamera(shadowCamera) {
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -47,6 +47,19 @@ PhongShader::PhongShader() {
 	if ( FAILED( hr ) ) {
 		MessageBoxA( nullptr, "Failed to create texture sampler.", "Error", MB_OK | MB_ICONERROR );
 	}
+
+	// Create shadowmap Resource
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	ZeroMemory( &shaderResourceViewDesc, sizeof( D3D11_SHADER_RESOURCE_VIEW_DESC ) );
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+
+	auto dxBuffer = dynamic_cast<DXFrameBuffer*>(buffer);
+	if ( FAILED( Device->CreateShaderResourceView( dxBuffer->DepthStencil, &shaderResourceViewDesc, &ShadowMapSRV ) ) ) {
+		MessageBoxA( nullptr, "Failed to create shadowmap resource.", "Error", MB_OK | MB_ICONERROR );
+	}
 }
 
 void PhongShader::Begin( Camera& camera ) {
@@ -59,8 +72,10 @@ void PhongShader::Begin( Camera& camera ) {
 		frameCBuffer->ProjectionMatrix = linalg::transpose( camera.GetProjectionMatrix() );
 		frameCBuffer->WorldToViewMatrix = linalg::transpose( camera.GetWorldToViewMatrix() );
 
+		frameCBuffer->LightProjectionMatrix = linalg::transpose( ShadowCamera->GetProjectionMatrix() * ShadowCamera->GetWorldToViewMatrix() );
+
 		frameCBuffer->IsDirectionalLight = false;
-		frameCBuffer->LightPosition = vec4f(0.2f, 4, 0.2f, 0); //vec4f( 0, 7, 0, 0 );
+		frameCBuffer->LightPosition = vec4f( 0.2f, 4, 0.2f, 0 ); //vec4f( 0, 7, 0, 0 );
 		frameCBuffer->CameraPosition = vec4f( camera.GetPosition(), 1 );
 	}
 	FlushCBuffer( 0 );
@@ -89,7 +104,7 @@ void PhongShader::RenderDrawcall( const material_t& material ) {
 	}
 	FlushCBuffer( 2 );
 
-	if (material.map_Kd_TexSRV != nullptr )
+	if ( material.map_Kd_TexSRV != nullptr )
 		DeviceContext->PSSetShaderResources( 0, 1, &material.map_Kd_TexSRV );
 
 	if ( material.map_Ks_TexSRV != nullptr )
@@ -100,5 +115,13 @@ void PhongShader::RenderDrawcall( const material_t& material ) {
 
 	if ( material.map_Mask_TexSRV != nullptr )
 		DeviceContext->PSSetShaderResources( 3, 1, &material.map_Mask_TexSRV );
+
+	// Bind Shadowmap
+	DeviceContext->PSSetShaderResources( 4, 1, &ShadowMapSRV );
+}
+
+PhongShader::~PhongShader() {
+	SAFE_RELEASE( ShadowMapSRV );
+	SAFE_RELEASE( SamplerState );
 }
 

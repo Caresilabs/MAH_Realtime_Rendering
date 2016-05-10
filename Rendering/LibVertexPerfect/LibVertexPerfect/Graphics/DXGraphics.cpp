@@ -1,44 +1,47 @@
 #include "stdafx.h"
 #include "DXGraphics.h"
+#include "DXFrameBuffer.h"
 
-DXGraphics::DXGraphics(HWND& window, int width, int height, bool vsync) : MainWindow(window) {
+DXGraphics::DXGraphics(HWND& window, int width, int height, bool vsync) : MainWindow(window), Width(width), Height(height) {
+}
+
+void DXGraphics::Init() {
 	HRESULT hr = S_OK;
 
-	if ( SUCCEEDED( hr = InitDirect3DAndSwapChain( width, height ) ) ) {
+	if ( SUCCEEDED( hr = InitDirect3DAndSwapChain( Width, Height ) ) ) {
 		InitRasterizerState();
 
-		if ( SUCCEEDED( hr = CreateRenderTargetView() ) &&
-			SUCCEEDED( hr = CreateDepthStencilView( width, height ) ) ) {
-			SetViewport( width, height );
+		//if ( SUCCEEDED( hr = CreateRenderTargetView() ) &&
+		//	SUCCEEDED( hr = CreateDepthStencilView( width, height ) ) ) {
 
-			DeviceContext->OMSetRenderTargets( 1, &RenderTargetView, DepthStencilView );
+		ScreenBuffer = new DXFrameBuffer( Width, Height, true );
 
-			//if ( SUCCEEDED( hr = CreateShadersAndInputLayout() ) ) {
-				//InitShaderBuffers();
-				//initObjects();
-			//}
-		}
+		SetViewport( Width, Height );
+
+		//DeviceContext->OMSetRenderTargets( 1, &RenderTargetView, DepthStencilView );
+
+		//if ( SUCCEEDED( hr = CreateShadersAndInputLayout() ) ) {
+		//InitShaderBuffers();
+		//initObjects();
+		//}
+		//}
 	}
 }
 
 void DXGraphics::Render(ApplicationListener* listener) {
+	ScreenBuffer->Bind();
+
 	listener->Render();
 	SwapChain->Present( 0, 0 );
 }
 
 void DXGraphics::ClearScreen( float r, float g, float b ) {
-	static float ClearColor[4] = { r, g, b, 1 };
-	DeviceContext->ClearRenderTargetView( RenderTargetView, ClearColor );
-
-	DeviceContext->ClearDepthStencilView( DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+	ScreenBuffer->Clear( r, g, b );
 }
 
 
 DXGraphics::~DXGraphics() {
 	SAFE_RELEASE( SwapChain );
-	SAFE_RELEASE( RenderTargetView );
-	SAFE_RELEASE( DepthStencil );
-	SAFE_RELEASE( DepthStencilView );
 	SAFE_RELEASE( RasterState );
 }
 
@@ -111,51 +114,6 @@ void DXGraphics::InitRasterizerState() {
 
 	Device->CreateRasterizerState( &rasterizerState, &RasterState );
 	DeviceContext->RSSetState( RasterState );
-}
-
-
-HRESULT DXGraphics::CreateDepthStencilView( int width, int height ) {
-	HRESULT hr = S_OK;
-
-	// Create depth stencil texture
-	D3D11_TEXTURE2D_DESC descDepth;
-	descDepth.Width = width;
-	descDepth.Height = height;
-	descDepth.MipLevels = 1;
-	descDepth.ArraySize = 1;
-	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-	descDepth.SampleDesc.Count = 1;
-	descDepth.SampleDesc.Quality = 0;
-	descDepth.Usage = D3D11_USAGE_DEFAULT;
-	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	descDepth.CPUAccessFlags = 0;
-	descDepth.MiscFlags = 0;
-	hr = Device->CreateTexture2D( &descDepth, nullptr, &DepthStencil );
-	if ( FAILED( hr ) )
-		return hr;
-
-	// Create the depth stencil view
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-	ZeroMemory( &descDSV, sizeof( descDSV ) );
-	descDSV.Format = descDepth.Format;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	descDSV.Texture2D.MipSlice = 0;
-	hr = Device->CreateDepthStencilView( DepthStencil, &descDSV, &DepthStencilView );
-
-	return hr;
-}
-
-
-HRESULT DXGraphics::CreateRenderTargetView() {
-	HRESULT hr = S_OK;
-	// Create a render target view
-	ID3D11Texture2D* pBackBuffer;
-	if ( SUCCEEDED( hr = SwapChain->GetBuffer( 0, __uuidof(ID3D11Texture2D), (void**)&pBackBuffer ) ) ) {
-		hr = Device->CreateRenderTargetView( pBackBuffer, nullptr, &RenderTargetView );
-		SAFE_RELEASE( pBackBuffer );
-	}
-
-	return hr;
 }
 
 

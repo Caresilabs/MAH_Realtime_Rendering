@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics.h"
+#include "FrameBuffer.h"
 
 #include <windows.h>
 #include <D3D11.h>
@@ -9,6 +10,8 @@ class DXGraphics :
 	public Graphics {
 public:
 	DXGraphics( HWND& window, int width, int height, bool vsync );
+
+	void Init();
 
 	void SetViewport( int width, int height );
 
@@ -21,21 +24,19 @@ public:
 
 	ID3D11Device*			Device = nullptr;
 	ID3D11DeviceContext*	DeviceContext = nullptr;
-
-private:
-
-	HRESULT InitDirect3DAndSwapChain( int width, int height );
-	void InitRasterizerState();
-	HRESULT CreateDepthStencilView( int width, int height );
-	HRESULT CreateRenderTargetView();
+	IDXGISwapChain*         SwapChain = nullptr;
+	ID3D11RasterizerState*	RasterState = nullptr;
 
 	HWND&					MainWindow;
 
-	IDXGISwapChain*         SwapChain = nullptr;
-	ID3D11RenderTargetView* RenderTargetView = nullptr;
-	ID3D11Texture2D*        DepthStencil = nullptr;
-	ID3D11DepthStencilView* DepthStencilView = nullptr;
-	ID3D11RasterizerState*	RasterState = nullptr;
+	FrameBuffer*			ScreenBuffer = nullptr;
+
+private:
+
+	HRESULT					InitDirect3DAndSwapChain( int width, int height );
+	void					InitRasterizerState();
+
+	int Width, Height;
 
 };
 

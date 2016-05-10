@@ -147,12 +147,14 @@
   <ItemGroup>
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="PhongShader.h" />
+    <ClInclude Include="ShadowMapShader.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssignmentApplication.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="PhongShader.cpp" />
+    <ClCompile Include="ShadowMapShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibVertexPerfect\LibVertexPerfect\LibVertexPerfect.vcxproj">

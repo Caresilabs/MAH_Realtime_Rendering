@@ -7,6 +7,8 @@ cbuffer PerFrameBuffer : register(b0)
 	float4 LightPosition;
 	float4 CameraPosition;
 
+	matrix LightProjectionMatrix;
+
 	bool   IsDirectionalLight;
 	float3 Pad;
 };
@@ -34,6 +36,7 @@ struct PSIn
 	float3 LightPos : LIGHTPOS;
 	float3 WorldPos : WORLDPOS;
 	float3 CameraPos : CAMERAPOS;
+	float4 LightPosTest : LIGHTPOSTEST;
 };
 
 PSIn VS_main(VSIn input)
@@ -47,6 +50,9 @@ PSIn VS_main(VSIn input)
 	
 	output.Pos = mul(float4(input.Pos, 1), MVP);
 	output.TexCoord = input.TexCoord;
+
+	// light Pos
+	output.LightPosTest = mul(float4(input.Pos, 1), mul(  ModelToWorldMatrix, LightProjectionMatrix )) ; //mul(  LightProjectionMatrix, ModelToWorldMatrix )
 
 	// Normals (TBN)
 	output.Normals[0] = mul(input.Tangent, ModelToWorldMatrix);

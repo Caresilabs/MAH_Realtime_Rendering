@@ -5,8 +5,9 @@ Camera::Camera(
 	float vfov,
 	float aspect,
 	float zNear,
-	float zFar ) :
-	vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 0.5f ), direction( 0, 0, -1 ), up( 0, 1, 0 ) {
+	float zFar,
+	bool perspective ) :
+	vfov( vfov ), aspect( aspect ), zNear( zNear ), zFar( zFar ), mouseSense( 0.5f ), direction( 0, 0, -1 ), up( 0, 1, 0 ), IsPerspective( perspective ) {
 }
 
 void Camera::MoveTo( const vec3f & p ) {
@@ -33,7 +34,11 @@ void Camera::MoveForward( float speed ) {
 
 void Camera::UpdateFrustrum() {
 	invViewMatrix = (LookAtMatrix());
-	projectionMatrix = mat4f::projection( vfov, aspect, zNear, zFar );
+	if ( IsPerspective ) {
+		projectionMatrix = mat4f::projection( vfov, aspect, zNear, zFar );
+	} else {
+		projectionMatrix = mat4f::ortho( -1, 1, -1, 1, zNear,  zFar); //zFar
+	}
 }
 
 void Camera::Look( float horizontal, float vertical ) {

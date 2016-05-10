@@ -13,6 +13,8 @@ class Camera {
 	vec3f up, direction;
 	float mouseSense;
 
+	bool IsPerspective;
+
 	mat4f projectionMatrix;
 	mat4f invViewMatrix;
 
@@ -22,7 +24,8 @@ public:
 		float vfov,
 		float aspect,
 		float zNear,
-		float zFar ); 
+		float zFar,
+		bool perspective = true); 
 
 	void MoveTo( const vec3f& p );
 

@@ -72,8 +72,10 @@ int DXApplication::Play( const DXApplicationConfig& config ) {
 	}
 
 	LVP::App = this;
+
 	Graphics = new DXGraphics( MainWindow, Width, Height, true );
 	LVP::Graphics = Graphics;
+	Graphics->Init();
 
 	Input = new WinInput();
 	LVP::Input = Input;

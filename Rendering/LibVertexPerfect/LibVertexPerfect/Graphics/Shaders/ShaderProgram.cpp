@@ -39,6 +39,7 @@ void ShaderProgram::Begin( Camera & camera ) {
 
 
 void ShaderProgram::End() {
+	//DeviceContext->Flush();
 }
 
 ShaderProgram::~ShaderProgram() {
