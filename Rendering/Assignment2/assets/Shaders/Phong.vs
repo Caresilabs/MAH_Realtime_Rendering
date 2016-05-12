@@ -8,6 +8,7 @@ cbuffer PerFrameBuffer : register(b0)
 	float4 CameraPosition;
 
 	matrix LightProjectionMatrix;
+	matrix LightToViewMatrix;
 
 	bool   IsDirectionalLight;
 	float3 Pad;
@@ -51,15 +52,17 @@ PSIn VS_main(VSIn input)
 	output.Pos = mul(float4(input.Pos, 1), MVP);
 	output.TexCoord = input.TexCoord;
 
+	float4 wpos = mul(float4(input.Pos, 1), ModelToWorldMatrix);
+
 	// light Pos
-	output.LightPosTest = mul(float4(input.Pos, 1), mul(  ModelToWorldMatrix, LightProjectionMatrix )) ; //mul(  LightProjectionMatrix, ModelToWorldMatrix )
+	output.LightPosTest = mul( wpos, mul(  LightToViewMatrix, LightProjectionMatrix ));  //mul(float4(input.Pos, 1), mul(  ModelToWorldMatrix, LightProjectionMatrix )) ; //mul(  LightProjectionMatrix, ModelToWorldMatrix )
 
 	// Normals (TBN)
 	output.Normals[0] = mul(input.Tangent, ModelToWorldMatrix);
 	output.Normals[1] = mul(input.Binormal, ModelToWorldMatrix);
 	output.Normals[2] = mul(input.Normal, ModelToWorldMatrix);
 
-	float3 worldPos =  mul(float4(input.Pos, 1), ModelToWorldMatrix).xyz;
+	float3 worldPos =  wpos.xyz;
 
 	if (IsDirectionalLight) {
 		output.LightPos = normalize( LightPosition.xyz );

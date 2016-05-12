@@ -16,6 +16,7 @@ class Camera {
 	bool IsPerspective;
 
 	mat4f projectionMatrix;
+	mat4f viewMatrix;
 	mat4f invViewMatrix;
 
 public:
@@ -45,6 +46,10 @@ public:
 
 	mat4f GetWorldToViewMatrix() const {
 		return invViewMatrix;
+	}
+
+	mat4f GetModelToWorld() const {
+		return viewMatrix;
 	}
 
 	mat4f GetProjectionMatrix() const {

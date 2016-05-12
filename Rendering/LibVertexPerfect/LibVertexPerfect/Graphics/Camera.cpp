@@ -33,11 +33,13 @@ void Camera::MoveForward( float speed ) {
 }
 
 void Camera::UpdateFrustrum() {
-	invViewMatrix = (LookAtMatrix());
+	invViewMatrix = (linalg::transpose(LookAtMatrix())) * mat4f::translation( -position );
+	viewMatrix = mat4f::translation( position ) * (LookAtMatrix());
+
 	if ( IsPerspective ) {
 		projectionMatrix = mat4f::projection( vfov, aspect, zNear, zFar );
 	} else {
-		projectionMatrix = mat4f::ortho( -1, 1, -1, 1, zNear,  zFar); //zFar
+		projectionMatrix = mat4f::ortho( -1, 1, -1, 1, zNear, zFar ); //zFar
 	}
 }
 
@@ -66,10 +68,10 @@ mat4f Camera::LookAtMatrix() const {
 	realUp.normalize();
 
 	mat4f mat( right.x, realUp.x, tempDir.x, 0.f,
-			right.y, realUp.y, tempDir.y, 0.f,
-			right.z, realUp.z, tempDir.z, 0.f,
-			0.f, 0.f, 0.f, 1.0f					///-linalg::dot( right, position ), -linalg::dot( realUp, position ), -linalg::dot( tempDir, position )
+		right.y, realUp.y, tempDir.y, 0.f,
+		right.z, realUp.z, tempDir.z, 0.f,
+		0.f, 0.f, 0.f, 1.0f					
 	);
 
-	return   linalg::transpose( mat ) * mat4f::translation(- position ) ;
+	return  mat;
 }

@@ -18,8 +18,9 @@ public:
 	virtual ~DXFrameBuffer();
 
 	ID3D11RenderTargetView* RenderTargetView = nullptr;
-	ID3D11Texture2D*        DepthStencil = nullptr;
 	ID3D11DepthStencilView* DepthStencilView = nullptr;
+
+	ID3D11Texture2D*        DepthStencil = nullptr;
 
 private:
 	DXGraphics*				Graphics;

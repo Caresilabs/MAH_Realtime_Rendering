@@ -82,29 +82,44 @@ float4 PS_main(PSIn input) : SV_Target
 	 float shadowScale = 1.0;
 
 	 //re-homogenize position after interpolation
-    input.LightPosTest.xyz /= input.LightPosTest.w;
+    input.LightPosTest.xyz /= input.LightPosTest.w;		
+
+
+	//transform clip space coords to texture space coords (-1:1 to 0:1)
+    input.LightPosTest.x = input.LightPosTest.x/2 + 0.5;
+    input.LightPosTest.y = input.LightPosTest.y/-2 + 0.5;
 
     //if position is not visible to the light - dont illuminate it
     //results in hard light frustum
-    if( input.LightPosTest.x < -1.0f || input.LightPosTest.x > 1.0f ||
-        input.LightPosTest.y < -1.0f || input.LightPosTest.y > 1.0f ||
-        input.LightPosTest.z < 0.0f  || input.LightPosTest.z > 1.0f ) 
-		{
-			shadowScale= 0.1;
-			return float4( (diffuse + specular) * shadowScale, 1);
-		}
- 
-    //transform clip space coords to texture space coords (-1:1 to 0:1)
-    input.LightPosTest.x = input.LightPosTest.x/2 + 0.5;
-    input.LightPosTest.y = input.LightPosTest.y/-2 + 0.5;
+    if((saturate( input.LightPosTest.x) !=  input.LightPosTest.x) || (saturate( input.LightPosTest.y) !=  input.LightPosTest.y))
+	{
+		shadowScale = Ka.x * 0.9;
+		return float4( (diffuse + specular) * shadowScale, 1);
+	}
 	
  
     //sample shadow map - point sampler
-    float shadowMapDepth = ShadowMapTexture.Sample(Sampler, input.LightPosTest.xy).r;
+    //float shadowMapDepth = ShadowMapTexture.Sample(Sampler, input.LightPosTest.xy).r;
  
+	// TODO Don't hardcode
+	float xOffset = 1.0/1280;
+    float yOffset = 1.0/720;
+
+	// PCF Calc
+    float Factor = 0.0;
+    for (int y = -1 ; y <= 1 ; y++) {
+        for (int x = -1 ; x <= 1 ; x++) {
+            float2 Offsets = float2(x * xOffset, y * yOffset);
+            float2 UV = float2(input.LightPosTest.xy + Offsets);
+            Factor += ShadowMapTexture.Sample(Sampler, UV).r;
+        }
+    }
+	
+	float zDepth = input.LightPosTest.z - 0.00008;
+
     //if clip space z value greater than shadow map value then pixel is in shadow
-    if ( shadowMapDepth < input.LightPosTest.z - 0.005)  {
-		shadowScale = 0.1;
+    if ( (Factor /  9.0)  <   zDepth  )  {
+		shadowScale = Ka.x * 0.9;
 	}
 	
 	return float4( (diffuse + specular) * shadowScale, 1);

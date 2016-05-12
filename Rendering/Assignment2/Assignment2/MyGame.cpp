@@ -21,12 +21,11 @@ void MyGame::Start() {
 	HandInstance->Position.y = 0.5f;
 
 
-
 	// Shadow stuff
-	ShadowMapBuffer = new DXFrameBuffer( LVP::App->Width, LVP::App->Height, true, false, true );
-	ShadowCam = new Camera( 0, 0, 0.2f, 30.0f, false );
-	ShadowCam->MoveTo( { 5, 11.2f, 2 } );
-	ShadowCam->Look( 3.14 / 4, -3.14 / 1.3f );
+	ShadowMapBuffer = new DXFrameBuffer( LVP::App->Width , LVP::App->Height, true, false, true );
+	ShadowCam = new Camera( 0, 0, 0.2f, 100.0f, false );
+	ShadowCam->MoveTo( {4, 13, 1} );
+	ShadowCam->Look( -3.14/2, -1.6f );
 	ShadowShader = new ShadowMapShader();
 
 
@@ -34,7 +33,7 @@ void MyGame::Start() {
 	Cam = new Camera( fPI / 4,				/*field-of-view*/
 		(float)LVP::App->Width / LVP::App->Height,					/*aspect ratio*/
 		.2f,								/*z-near plane (everything closer will be clipped/removed)*/
-		30.0f );
+		100.0f, true );
 	Cam->MoveTo( { 0, 0, 5 } );
 
 	Shader = new PhongShader( ShadowMapBuffer, ShadowCam );
@@ -75,7 +74,7 @@ void MyGame::Update( float delta ) {
 	Cam->Look( LVP::Input->GetMouseDeltaX() * delta, -LVP::Input->GetMouseDeltaY() *delta );
 	Cam->UpdateFrustrum();
 
-	//ShadowCam->MoveTo( Cam->GetPosition() );
+	//ShadowCam->MoveTo( Cam->GetPosition() - Cam->GetDirection()*20 );
 	//ShadowCam->Look( LVP::Input->GetMouseDeltaX() * delta, -LVP::Input->GetMouseDeltaY() *delta );
 	ShadowCam->UpdateFrustrum();
 
@@ -103,7 +102,10 @@ void MyGame::Render() {
 	ShadowMapBuffer->Unbind();
 
 	
-	Shader->Begin( *Cam );
+	if ( LVP::Input->IsKeyDown( 'T' ) )
+		Shader->Begin( *ShadowCam );
+	else
+		Shader->Begin( *Cam );
 	{
 		RenderScene( Shader );
 	}

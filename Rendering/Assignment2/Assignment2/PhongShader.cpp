@@ -72,10 +72,11 @@ void PhongShader::Begin( Camera& camera ) {
 		frameCBuffer->ProjectionMatrix = linalg::transpose( camera.GetProjectionMatrix() );
 		frameCBuffer->WorldToViewMatrix = linalg::transpose( camera.GetWorldToViewMatrix() );
 
-		frameCBuffer->LightProjectionMatrix = linalg::transpose( ShadowCamera->GetProjectionMatrix() * ShadowCamera->GetWorldToViewMatrix() );
+		frameCBuffer->LightProjectionMatrix =  linalg::transpose(  ShadowCamera->GetProjectionMatrix() );
+		frameCBuffer->LightToViewMatrix = linalg::transpose( ShadowCamera->GetWorldToViewMatrix() );
 
 		frameCBuffer->IsDirectionalLight = false;
-		frameCBuffer->LightPosition = vec4f( 0.2f, 4, 0.2f, 0 ); //vec4f( 0, 7, 0, 0 );
+		frameCBuffer->LightPosition = vec4f( ShadowCamera->GetPosition(), 1);	//vec4f( 0.2f, 4, 0.2f, 0 ); //vec4f( 0, 7, 0, 0 );
 		frameCBuffer->CameraPosition = vec4f( camera.GetPosition(), 1 );
 	}
 	FlushCBuffer( 0 );

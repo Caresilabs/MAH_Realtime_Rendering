@@ -27,6 +27,7 @@ private:
 		vec4f LightPosition;
 		vec4f CameraPosition;
 		mat4f LightProjectionMatrix;
+		mat4f LightToViewMatrix;
 		int   IsDirectionalLight;
 		vec3f Padding;
 	};
