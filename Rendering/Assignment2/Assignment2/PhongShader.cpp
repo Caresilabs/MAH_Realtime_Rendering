@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "PhongShader.h"
 #include "Graphics/DXFrameBuffer.h"
-#include "WICTextureLoader.h"
 #include "DDSTextureLoader.h"
 
 PhongShader::PhongShader( FrameBuffer* buffer, Camera* shadowCamera ) : ShadowCamera(shadowCamera) {
@@ -64,7 +63,7 @@ PhongShader::PhongShader( FrameBuffer* buffer, Camera* shadowCamera ) : ShadowCa
 	}
 
 	// Load cubemap
-	DirectX::CreateWICTextureFromFile( Device, DeviceContext, L"assets/skybox.png", &SkyBoxTex, &SkyBoxSRV );
+	DirectX::CreateDDSTextureFromFile( Device, DeviceContext, L"assets/skybox.dds", &SkyBoxTex, &SkyBoxSRV );
 }
 
 void PhongShader::Begin( Camera& camera ) {
@@ -80,7 +79,7 @@ void PhongShader::Begin( Camera& camera ) {
 		frameCBuffer->LightProjectionMatrix =  linalg::transpose(  ShadowCamera->GetProjectionMatrix() );
 		frameCBuffer->LightToViewMatrix = linalg::transpose( ShadowCamera->GetWorldToViewMatrix() );
 
-		frameCBuffer->IsDirectionalLight = false;
+		frameCBuffer->IsDirectionalLight = true;
 		frameCBuffer->LightPosition = vec4f( ShadowCamera->GetPosition(), 1);	//vec4f( 0.2f, 4, 0.2f, 0 ); //vec4f( 0, 7, 0, 0 );
 		frameCBuffer->CameraPosition = vec4f( camera.GetPosition(), 1 );
 	}
@@ -107,6 +106,7 @@ void PhongShader::RenderDrawcall( const material_t& material ) {
 		drawCBuffer->Ka = material.Ka;
 		drawCBuffer->Kd = material.Kd;
 		drawCBuffer->Ks = material.Ks;
+		drawCBuffer->ReflectionValue = material.ReflectionValue;
 	}
 	FlushCBuffer( 2 );
 

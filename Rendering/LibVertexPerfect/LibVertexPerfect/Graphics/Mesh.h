@@ -12,6 +12,8 @@ public:
 
 	virtual ~Mesh();
 
+	std::vector<material_t> materials;
+
 protected:
 
 	// pointers to device vertex & index arrays
@@ -19,17 +21,6 @@ protected:
 	ID3D11Buffer* IndexBuffer = nullptr;
 
 	ID3D11DeviceContext* DeviceContext;
-
-};
-
-class OBJMesh : public Mesh {
-public:
-
-	OBJMesh( const std::string& file );
-
-	void Render( ShaderProgram& shader ) const override;
-
-private:
 
 	// index ranges, representing drawcalls, within an index array
 	struct IndexRange {
@@ -40,11 +31,20 @@ private:
 	};
 
 	std::vector<IndexRange> index_ranges;
-	std::vector<material_t> materials;
 
 	void append_materials( const std::vector<material_t>& mtl_vec ) {
 		materials.insert( materials.end(), mtl_vec.begin(), mtl_vec.end() );
 	}
+
+};
+
+class OBJMesh : public Mesh {
+public:
+
+	OBJMesh( const std::string& file );
+
+	void Render( ShaderProgram& shader ) const override;
+
 };
 
 class CubeMesh : public Mesh {

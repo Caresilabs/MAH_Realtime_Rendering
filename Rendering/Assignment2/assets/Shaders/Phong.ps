@@ -13,7 +13,8 @@ cbuffer PerObjectBuffer : register(b2)
 	int	  NormalUseTexture;
 	int	  MaskUseTexture;
 
-	float2 Pad;
+	float ReflectionValue;
+	float Pad;
 };
 
 struct PSIn
@@ -54,7 +55,7 @@ float4 PS_main(PSIn input) : SV_Target
 		normal = normalize(input.Normals[2]);
 	}
 	
-	float3 lightDir = normalize(  input.LightPos - input.WorldPos );
+	float3 lightDir = normalize(  input.LightPos  ); //- input.WorldPos
 	float3 viewDir = normalize( input.CameraPos - input.WorldPos );
 
 	float texScale = 1.0f;
@@ -69,7 +70,7 @@ float4 PS_main(PSIn input) : SV_Target
 	}
 
 	// Specular
-	float specPow = 30.0;
+	float specPow = 90.0;
 	float3 specular;
 	if (KsUseTexture) {
 		specular = pow( max(0, dot(-reflect(lightDir, normal), viewDir)), specPow) * SpecularTexture.Sample(Sampler, input.TexCoord).rrr;
@@ -77,12 +78,18 @@ float4 PS_main(PSIn input) : SV_Target
 		specular = pow( max(0, dot(-reflect(lightDir, normal), viewDir)), specPow) * Ks;
 	 }
 
-	 diffuse = diffuse + (0.999 * SkyBoxTexture.Sample(Sampler, reflect(viewDir, normal))); 
+
+	// Reflections
+	if ( ReflectionValue != 0 ) {
+		diffuse = ((1.0 - ReflectionValue) * diffuse) + SkyBoxTexture.Sample(Sampler, -reflect(viewDir, normal)) * ReflectionValue;
+		specular *= 1.0 - ReflectionValue;
+	}
+
 
 	// Shadows start
 	float shadowScale = 1.0;
 
-	 // re-homogenize position after interpolation
+	 // Convert to NDC
     input.LightPosTest.xyz /= input.LightPosTest.w;		
 
 
@@ -94,7 +101,7 @@ float4 PS_main(PSIn input) : SV_Target
     if((saturate( input.LightPosTest.x) != input.LightPosTest.x) || (saturate( input.LightPosTest.y) !=  input.LightPosTest.y))
 	{
 		shadowScale = Ka.x * 0.9;
-		return float4( (diffuse + specular) * shadowScale, 1);
+		return float4( ( diffuse ) * shadowScale, 1);
 	}
 	
 	// TODO Don't hardcode
@@ -117,7 +124,9 @@ float4 PS_main(PSIn input) : SV_Target
     // if clip space z value greater than shadow map value then pixel is in shadow
     if ( Factor <  zDepth  )  {
 		shadowScale = Ka.x * 0.9;
+		return float4( ( diffuse ) * shadowScale, 1);
 	}
-	
-	return float4( (diffuse + specular) * shadowScale, 1);
+
+
+	return float4( ( diffuse + specular), 1);
 }

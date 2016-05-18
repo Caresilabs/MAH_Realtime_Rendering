@@ -27,6 +27,8 @@ struct material_t {
 	//  Phong color components: ambient, diffuse & specular
 	vec3f Ka = { 0, 0.5, 0 }, Kd = { 0, 0.5, 0 }, Ks = { 1, 1, 1 };
 
+	float ReflectionValue = 0;
+
 	std::string name;		// material name
 	std::string map_Kd;		// file path
 	std::string map_bump;	// file path

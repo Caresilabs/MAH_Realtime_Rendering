@@ -19,7 +19,7 @@ public:
 	vec3f Rotation;
 	vec3f Scale;
 
-private:
-	VPtr<Mesh> MyMesh;
+	VPtr<Mesh> MeshPtr;
+
 };
 

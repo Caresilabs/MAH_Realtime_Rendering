@@ -53,7 +53,8 @@ private:
 		int	  NormalUseTexture;
 		int	  MaskUseTexture;
 
-		vec2f Pad;
+		float ReflectionValue;
+		float Pad;
 	};
 
 
