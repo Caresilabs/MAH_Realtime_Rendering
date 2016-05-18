@@ -19,6 +19,9 @@ private:
 	ID3D11SamplerState*			SamplerState;
 	ID3D11ShaderResourceView*	ShadowMapSRV;
 
+	ID3D11ShaderResourceView*	SkyBoxSRV = nullptr;
+	ID3D11Resource*				SkyBoxTex = nullptr;
+
 	Camera*						ShadowCamera;
 
 	struct PerFrameBufferData {

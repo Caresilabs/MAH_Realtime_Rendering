@@ -37,6 +37,8 @@ void MyGame::Start() {
 	Cam->MoveTo( { 0, 0, 5 } );
 
 	Shader = new PhongShader( ShadowMapBuffer, ShadowCam );
+
+	ActiveCam = Cam;
 }
 
 void MyGame::Update( float delta ) {
@@ -51,31 +53,36 @@ void MyGame::Update( float delta ) {
 		speed = 4.5f;
 	}
 
+	if ( LVP::Input->IsKeyDown( '9' ) ) {
+		ActiveCam = ShadowCam;
+	} else if ( LVP::Input->IsKeyDown( '0' ) ) {
+		ActiveCam = Cam;
+	}
+
 	if ( LVP::Input->IsKeyDown( 'S' ) ) {
-		Cam->MoveForward( -delta * speed );
+		ActiveCam->MoveForward( -delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'W' ) ) {
-		Cam->MoveForward( delta * speed );
+		ActiveCam->MoveForward( delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'A' ) ) {
-		Cam->MoveSideways( -delta * speed );
+		ActiveCam->MoveSideways( -delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'D' ) ) {
-		Cam->MoveSideways( delta * speed );
+		ActiveCam->MoveSideways( delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'Q' ) ) {
-		Cam->MoveVertical( -delta * speed );
+		ActiveCam->MoveVertical( -delta * speed );
 	}
 	if ( LVP::Input->IsKeyDown( 'E' ) ) {
-		Cam->MoveVertical( delta * speed );
+		ActiveCam->MoveVertical( delta * speed );
 	}
 
 
-	Cam->Look( LVP::Input->GetMouseDeltaX() * delta, -LVP::Input->GetMouseDeltaY() *delta );
+	ActiveCam->Look( LVP::Input->GetMouseDeltaX() * delta, -LVP::Input->GetMouseDeltaY() *delta );
+	
+	
 	Cam->UpdateFrustrum();
-
-	//ShadowCam->MoveTo( Cam->GetPosition() - Cam->GetDirection()*20 );
-	//ShadowCam->Look( LVP::Input->GetMouseDeltaX() * delta, -LVP::Input->GetMouseDeltaY() *delta );
 	ShadowCam->UpdateFrustrum();
 
 	HandInstance->Rotation.y += delta;
@@ -102,10 +109,7 @@ void MyGame::Render() {
 	ShadowMapBuffer->Unbind();
 
 	
-	if ( LVP::Input->IsKeyDown( 'T' ) )
-		Shader->Begin( *ShadowCam );
-	else
-		Shader->Begin( *Cam );
+	Shader->Begin( *ActiveCam );
 	{
 		RenderScene( Shader );
 	}

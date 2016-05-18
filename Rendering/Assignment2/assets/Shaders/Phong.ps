@@ -32,6 +32,7 @@ Texture2D SpecularTexture : register(t1);
 Texture2D NormalTexture : register(t2);
 Texture2D MaskTexture : register(t3);
 Texture2D ShadowMapTexture : register(t4);
+TextureCube SkyBoxTexture : register(t5);
 
 sampler Sampler : register(s0);
 
@@ -71,32 +72,34 @@ float4 PS_main(PSIn input) : SV_Target
 	float specPow = 30.0;
 	float3 specular;
 	if (KsUseTexture) {
-		specular = pow( max(0, dot(-reflect(lightDir, normal), viewDir)), specPow) * SpecularTexture.Sample(Sampler, input.TexCoord).xxx;
+		specular = pow( max(0, dot(-reflect(lightDir, normal), viewDir)), specPow) * SpecularTexture.Sample(Sampler, input.TexCoord).rrr;
 	 } else {
 		specular = pow( max(0, dot(-reflect(lightDir, normal), viewDir)), specPow) * Ks;
 	 }
 
-	// Shadows
+	 diffuse = diffuse + (0.999 * SkyBoxTexture.Sample(Sampler, reflect(viewDir, normal))); 
+
+	// Shadows start
 	float shadowScale = 1.0;
 
 	 // re-homogenize position after interpolation
     input.LightPosTest.xyz /= input.LightPosTest.w;		
 
 
-	// transform clip space coords to texture space coords (-1:1 to 0:1)
-    input.LightPosTest.x = input.LightPosTest.x/2 + 0.5;
-    input.LightPosTest.y = input.LightPosTest.y/-2 + 0.5;
+	// transform clip coords to tex coords
+    input.LightPosTest.x = input.LightPosTest.x / 2.0 + 0.5;
+    input.LightPosTest.y = input.LightPosTest.y / -2.0 + 0.5;
 
     // Cull out everytthing outside frustum
-    if((saturate( input.LightPosTest.x) !=  input.LightPosTest.x) || (saturate( input.LightPosTest.y) !=  input.LightPosTest.y))
+    if((saturate( input.LightPosTest.x) != input.LightPosTest.x) || (saturate( input.LightPosTest.y) !=  input.LightPosTest.y))
 	{
 		shadowScale = Ka.x * 0.9;
 		return float4( (diffuse + specular) * shadowScale, 1);
 	}
 	
 	// TODO Don't hardcode
-	float xOffset = 1.0 / 1280;
-    float yOffset = 1.0 / 720;
+	float xOffset = 0.9 / 1280.0;
+    float yOffset = 0.9 / 720.0;
 
 	// PCF Calc
     float Factor = 0.0;
@@ -112,7 +115,7 @@ float4 PS_main(PSIn input) : SV_Target
 	float zDepth = input.LightPosTest.z - 0.00008;
 
     // if clip space z value greater than shadow map value then pixel is in shadow
-    if ( Factor  <   zDepth  )  {
+    if ( Factor <  zDepth  )  {
 		shadowScale = Ka.x * 0.9;
 	}
 	

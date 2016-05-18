@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "PhongShader.h"
 #include "Graphics/DXFrameBuffer.h"
+#include "WICTextureLoader.h"
+#include "DDSTextureLoader.h"
 
 PhongShader::PhongShader( FrameBuffer* buffer, Camera* shadowCamera ) : ShadowCamera(shadowCamera) {
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
@@ -60,6 +62,9 @@ PhongShader::PhongShader( FrameBuffer* buffer, Camera* shadowCamera ) : ShadowCa
 	if ( FAILED( Device->CreateShaderResourceView( dxBuffer->DepthStencil, &shaderResourceViewDesc, &ShadowMapSRV ) ) ) {
 		MessageBoxA( nullptr, "Failed to create shadowmap resource.", "Error", MB_OK | MB_ICONERROR );
 	}
+
+	// Load cubemap
+	DirectX::CreateWICTextureFromFile( Device, DeviceContext, L"assets/skybox.png", &SkyBoxTex, &SkyBoxSRV );
 }
 
 void PhongShader::Begin( Camera& camera ) {
@@ -119,6 +124,8 @@ void PhongShader::RenderDrawcall( const material_t& material ) {
 
 	// Bind Shadowmap
 	DeviceContext->PSSetShaderResources( 4, 1, &ShadowMapSRV );
+
+	DeviceContext->PSSetShaderResources( 5, 1, &SkyBoxSRV );
 }
 
 PhongShader::~PhongShader() {

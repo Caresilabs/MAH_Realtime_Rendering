@@ -100,7 +100,6 @@ OBJMesh::OBJMesh( const std::string & file ) {
 			hr = DirectX::CreateWICTextureFromFile( Device, DeviceContext, wstr.c_str(), &mtl.map_Mask_Tex, &mtl.map_Mask_TexSRV );
 			printf( "loading texture %s - %s\n", mtl.map_mask.c_str(), SUCCEEDED( hr ) ? "OK" : "FAILED" );
 		}
-
 		// other maps here...
 	}
 

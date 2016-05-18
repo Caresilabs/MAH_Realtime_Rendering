@@ -26,6 +26,8 @@ private:
 	VPtr<ShaderProgram>		Shader;
 	VPtr<Camera>			Cam;
 
+	VPtr<Camera>			ActiveCam;
+
 	VPtr<Camera>			ShadowCam;
 	VPtr<ShaderProgram>		ShadowShader;
 	VPtr<DXFrameBuffer>		ShadowMapBuffer;
