@@ -29,7 +29,7 @@ void MyGame::Start() {
 
 
 	// Shadow stuff
-	ShadowMapBuffer = new DXFrameBuffer( LVP::App->Width , LVP::App->Height, true, false, true );
+	ShadowMapBuffer = new DXFrameBuffer( LVP::App->Width * 1.4f , LVP::App->Height * 1.4f, true, false, true );
 	ShadowCam = new Camera( 0, 0, 0.2f, 100.0f, false );
 	ShadowCam->MoveTo( {4, 11, 1} );
 	ShadowCam->Look( -3.14/2, -1.6f );

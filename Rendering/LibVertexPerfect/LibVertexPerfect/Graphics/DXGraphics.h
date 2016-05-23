@@ -13,8 +13,6 @@ public:
 
 	void Init();
 
-	void SetViewport( int width, int height );
-
 	// Inherited via Graphics
 	virtual void Render(ApplicationListener* listener) override;
 

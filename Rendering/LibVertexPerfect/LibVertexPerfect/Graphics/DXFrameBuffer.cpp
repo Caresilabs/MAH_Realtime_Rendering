@@ -13,9 +13,19 @@ DXFrameBuffer::DXFrameBuffer( int width, int height, bool depthView, bool colorV
 	if ( Depth ) {
 		CreateDepthStencilView( width, height, useShaderResource );
 	}
+	
+	// New viewport
+	ViewPort.Width = (float)width;
+	ViewPort.Height = (float)height;
+	ViewPort.MinDepth = 0.0f;
+	ViewPort.MaxDepth = 1.0f;
+	ViewPort.TopLeftX = 0;
+	ViewPort.TopLeftY = 0;
 }
 
 void DXFrameBuffer::Bind() {
+	Graphics->DeviceContext->RSSetViewports( 1, &ViewPort );
+
 	if ( Color )
 		Graphics->DeviceContext->OMSetRenderTargets( 1, &RenderTargetView, DepthStencilView );
 	else

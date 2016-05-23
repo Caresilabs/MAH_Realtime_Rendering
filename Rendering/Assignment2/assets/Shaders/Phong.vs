@@ -55,7 +55,7 @@ PSIn VS_main(VSIn input)
 	float4 wpos = mul(float4(input.Pos, 1), ModelToWorldMatrix);
 
 	// light Pos
-	output.LightPosTest = mul( wpos, mul(  LightToViewMatrix, LightProjectionMatrix ));  //mul(float4(input.Pos, 1), mul(  ModelToWorldMatrix, LightProjectionMatrix )) ; //mul(  LightProjectionMatrix, ModelToWorldMatrix )
+	output.LightPosTest = mul( wpos, mul(  LightToViewMatrix, LightProjectionMatrix ));  
 
 	// Normals (TBN)
 	output.Normals[0] = mul(input.Tangent, ModelToWorldMatrix);

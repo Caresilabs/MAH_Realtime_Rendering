@@ -31,7 +31,7 @@ LRESULT CALLBACK MainWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 			App->Width = size.right - size.left;
 			App->Height = size.bottom - size.top;
 
-			Graphics->SetViewport( App->Width, App->Height );
+			//Graphics->SetViewport( App->Width, App->Height );
 			App->Listener->Resize();
 		}
 		break;

@@ -16,7 +16,7 @@ void DXGraphics::Init() {
 
 		ScreenBuffer = new DXFrameBuffer( Width, Height, true );
 
-		SetViewport( Width, Height );
+		//SetViewport( Width, Height );
 
 		//DeviceContext->OMSetRenderTargets( 1, &RenderTargetView, DepthStencilView );
 
@@ -85,18 +85,6 @@ HRESULT DXGraphics::InitDirect3DAndSwapChain( int width, int height ) {
 	SwapChain->Present( 1, 0 );
 
 	return hr;
-}
-
-void DXGraphics::SetViewport( int width, int height ) {
-	// Setup the viewport
-	D3D11_VIEWPORT vp;
-	vp.Width = (float)width;
-	vp.Height = (float)height;
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	DeviceContext->RSSetViewports( 1, &vp );
 }
 
 void DXGraphics::InitRasterizerState() {

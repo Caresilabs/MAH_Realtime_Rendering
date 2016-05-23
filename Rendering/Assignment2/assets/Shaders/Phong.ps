@@ -105,8 +105,8 @@ float4 PS_main(PSIn input) : SV_Target
 	}
 	
 	// TODO Don't hardcode
-	float xOffset = 0.9 / 1280.0;
-    float yOffset = 0.9 / 720.0;
+	float xOffset = 1.0 / 1280.0;
+    float yOffset = 1.0 / 720.0;
 
 	// PCF Calc
     float Factor = 0.0;

@@ -22,6 +22,8 @@ public:
 
 	ID3D11Texture2D*        DepthStencil = nullptr;
 
+	D3D11_VIEWPORT			ViewPort;
+
 private:
 	DXGraphics*				Graphics;
 };
